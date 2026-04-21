@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Boricua Flashcards</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root {
+      --bg: #09101c;
+      --panel: #111a2b;
+      --panel-2: #162238;
+      --text: #f3f5f9;
+      --muted: #aeb8c9;
+      --line: rgba(255,255,255,.08);
+      --good: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --accent: #60a5fa;
+      --accent-2: #a78bfa;
+      --chip: rgba(255,255,255,.06);
+      --shadow: 0 14px 34px rgba(0,0,0,.28);
+      --radius: 22px;
+      --radius-sm: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,.18), transparent 25%),
+        radial-gradient(circle at top left, rgba(167,139,250,.12), transparent 22%),
+        linear-gradient(180deg, #0a1323 0%, var(--bg) 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .app {
+      max-width: 860px;
+      margin: 0 auto;
+      min-height: 100vh;
+      padding: 18px 16px 28px;
+      padding-top: calc(18px + env(safe-area-inset-top));
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      line-height: 1.15;
+      letter-spacing: -.02em;
+    }
+    .sub {
+      margin-top: 4px;
+      font-size: .92rem;
+      color: var(--muted);
+    }
+    .button, button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 15px;
+      font-size: .98rem;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--panel-2);
+      cursor: pointer;
+      transition: transform .08s ease, opacity .15s ease, background .15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active {
+      transform: translateY(1px) scale(.995);
+    }
+    button.secondary {
+      background: var(--chip);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    button.good {
+      background: rgba(34,197,94,.18);
+      color: #d8ffe4;
+      border: 1px solid rgba(34,197,94,.25);
+    }
+    button.bad {
+      background: rgba(239,68,68,.16);
+      color: #ffe0e0;
+      border: 1px solid rgba(239,68,68,.22);
+    }
+    button.accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: var(--shadow);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: rgba(17,26,43,.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .stat-label {
+      color: var(--muted);
+      font-size: .78rem;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      background: rgba(17,26,43,.75);
+      border: 1px solid var(--line);
+      padding: 8px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+    .tab {
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 14px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .92rem;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: var(--panel-2);
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+    .panel {
+      background: rgba(17,26,43,.8);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .chip {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip.active {
+      background: rgba(96,165,250,.16);
+      color: #dbeafe;
+      border-color: rgba(96,165,250,.35);
+    }
+    .card {
+      position: relative;
+      border-radius: 26px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
+        linear-gradient(135deg, rgba(96,165,250,.12), rgba(167,139,250,.12));
+      border: 1px solid var(--line);
+      min-height: 270px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(96,165,250,.16), transparent 68%);
+      pointer-events: none;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .prompt {
+      font-size: clamp(1.55rem, 4vw, 2.15rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      margin: 16px 0 8px;
+    }
+    .answer {
+      font-size: clamp(1.35rem, 3.6vw, 1.75rem);
+      font-weight: 800;
+      color: #dbeafe;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: .96rem;
+      line-height: 1.42;
+    }
+    .example {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      color: #d8dfeb;
+      font-size: .96rem;
+      line-height: 1.48;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .actions.single {
+      grid-template-columns: 1fr;
+    }
+    .quiz-choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .quiz-choice {
+      text-align: left;
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-weight: 700;
+    }
+    .quiz-choice.correct {
+      background: rgba(34,197,94,.18);
+      border-color: rgba(34,197,94,.3);
+    }
+    .quiz-choice.wrong {
+      background: rgba(239,68,68,.15);
+      border-color: rgba(239,68,68,.3);
+    }
+    .meter {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .meter > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: inherit;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+    }
+    .mini-list {
+      display: grid;
+      gap: 10px;
+    }
+    .mini-item {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .mini-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+    .mini-title {
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .small {
+      font-size: .88rem;
+    }
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .settings-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .switch {
+      position: relative;
+      width: 54px;
+      height: 32px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .switch span {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      transition: transform .18s ease;
+    }
+    .switch.on {
+      background: rgba(96,165,250,.32);
+    }
+    .switch.on span {
+      transform: translateX(22px);
+    }
+    .hidden { display: none !important; }
+    .badge-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .badge {
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(167,139,250,.14);
+      border: 1px solid rgba(167,139,250,.28);
+      color: #ede9fe;
+      font-size: .85rem;
+      font-weight: 700;
+    }
+    .callout {
+      background: rgba(96,165,250,.08);
+      border: 1px solid rgba(96,165,250,.22);
+      border-radius: 18px;
+      padding: 12px 13px;
+      color: #dbeafe;
+      line-height: 1.45;
+      font-size: .95rem;
+    }
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .score-burst {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      padding: 12px 14px;
+      background: rgba(34,197,94,.18);
+      border: 1px solid rgba(34,197,94,.24);
+      border-radius: 16px;
+      color: #d8ffe4;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 999;
+    }
+    .score-burst.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 740px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .grid-2 { grid-template-columns: 1fr; }
+      .prompt { margin-top: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">Ñ</div>
+        <div>
+          <h1>Boricua Flashcards</h1>
+          <div class="sub">High-frequency Spanish + Puerto Rican everyday vocabulary</div>
+        </div>
+      </div>
+      <button id="studyNowBtn" class="accent">Study now</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Level</div>
+        <div id="levelValue" class="stat-value">1</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">XP</div>
+        <div id="xpValue" class="stat-value">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Streak</div>
+        <div id="streakValue" class="stat-value">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Accuracy</div>
+        <div id="accuracyValue" class="stat-value">0%</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="study">Study</div>
+      <div class="tab" data-tab="quiz">Quiz</div>
+      <div class="tab" data-tab="progress">Progress</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <section id="studyTab" class="tab-panel">
+      <div class="panel">
+        <div class="toolbar">
+          <div class="chip active" data-filter="all">All cards</div>
+          <div class="chip" data-filter="verb">Verbs</div>
+          <div class="chip" data-filter="common">Common words</div>
+          <div class="chip" data-filter="puerto_rico">Puerto Rico</div>
+          <div class="chip" data-filter="due">Due now</div>
+        </div>
+
+        <div id="studyCard" class="card">
+          <div>
+            <div id="studyTag" class="tag">Verb</div>
+            <div id="studyPrompt" class="prompt">Ready?</div>
+            <div id="studyAnswerBlock" class="hidden">
+              <div id="studyAnswer" class="answer"></div>
+              <div id="studyMeta" class="meta"></div>
+              <div id="studyExample" class="example"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="meter"><span id="goalMeter"></span></div>
+            <div id="goalText" class="muted small" style="margin-top:8px;">0 / 100 XP today</div>
+            <div id="studyActions" class="actions single">
+              <button id="showAnswerBtn" class="accent">Show answer</button>
+              <button id="reviewBtn" class="bad hidden">Need review</button>
+              <button id="gotItBtn" class="good hidden">Got it</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button id="skipBtn" class="secondary">Skip</button>
+          <button id="shuffleBtn" class="secondary">Shuffle</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="callout">
+          Puerto Rico mode keeps standard Spanish in the core deck, then adds local everyday terms like "guagua," "china," and "zafacón," plus quick ear-training notes for how Boricua Spanish often sounds in casual speech.
+        </div>
+      </div>
+    </section>
+
+    <section id="quizTab" class="tab-panel hidden">
+      <div class="panel">
+        <div id="quizCard" class="card">
+          <div>
+            <div id="quizTag" class="tag">Quiz</div>
+            <div id="quizPrompt" class="prompt">Tap Start Quiz</div>
+            <div id="quizFeedback" class="meta hidden" style="margin-top:10px;"></div>
+            <div id="quizExample" class="example hidden"></div>
+          </div>
+          <div>
+            <div id="quizChoices" class="quiz-choices hidden"></div>
+            <div class="actions single" style="margin-top:14px;">
+              <button id="startQuizBtn" class="accent">Start quiz</button>
+              <button id="nextQuizBtn" class="secondary hidden">Next card</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="progressTab" class="tab-panel hidden">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="mini-top">
+            <div class="mini-title">Today’s goal</div>
+            <div id="todayGoalPct" class="muted small">0%</div>
+          </div>
+          <div class="meter"><span id="progressGoalMeter"></span></div>
+          <div class="mini-list" style="margin-top:14px;">
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Overall progress</div><div id="masteredCount" class="muted small"></div></div>
+              <div class="meter"><span id="masteryMeter"></span></div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Verbs</div><div id="verbPct" class="muted small"></div></div>
+              <div class="meter"><span id="verbMeter"></span></div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Common words</div><div id="commonPct" class="muted small"></div></div>
+              <div class="meter"><span id="commonMeter"></span></div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Puerto Rico pack</div><div id="prPct" class="muted small"></div></div>
+              <div class="meter"><span id="prMeter"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="mini-title">Stats</div>
+          <div class="mini-list" style="margin-top:12px;">
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Cards due now</div><div id="dueNowValue" class="muted small">0</div></div>
+              <div class="small muted">Cards ready for another review based on your spaced-repetition progress.</div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Reviewed</div><div id="reviewedValue" class="muted small">0</div></div>
+              <div class="small muted">Total study marks + quiz answers saved on this device.</div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Best streak</div><div id="bestStreakValue" class="muted small">0</div></div>
+              <div class="small muted">Longest correct-answer streak so far.</div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-top"><div class="mini-title">Needs work</div><div class="muted small">Top misses</div></div>
+              <div id="weakCards" class="small muted">No misses yet. Nice.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="mini-title">Badges</div>
+        <div id="badges" class="badge-wrap"></div>
+      </div>
+    </section>
+
+    <section id="settingsTab" class="tab-panel hidden">
+      <div class="panel">
+        <div class="settings-row">
+          <div>
+            <div class="mini-title">Prompt direction</div>
+            <div class="small muted">English to Spanish is harder and better for active recall.</div>
+          </div>
+          <button id="directionBtn" class="secondary">EN → ES</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="mini-title">Puerto Rico pack</div>
+            <div class="small muted">Keep local Puerto Rican words and phrases in the deck.</div>
+          </div>
+          <div id="prToggle" class="switch on"><span></span></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="mini-title">Only due cards in Study</div>
+            <div class="small muted">Focus your next reviews on cards that are actually due.</div>
+          </div>
+          <div id="dueToggle" class="switch"><span></span></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="mini-title">Puerto Rico listening notes</div>
+            <div class="small muted">Casual Boricua speech often softens or drops syllable-final "s" and may soften some "d" sounds.</div>
+          </div>
+          <div class="tag">Built in</div>
+        </div>
+
+        <div class="footer-actions">
+          <button id="resetProgressBtn" class="bad">Reset progress</button>
+          <button id="exportBtn" class="secondary">Export progress</button>
+          <button id="importBtn" class="secondary">Import progress</button>
+          <input id="importFile" type="file" accept="application/json" class="hidden" />
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="scoreBurst" class="score-burst">+10 XP</div>
+
+  <script>
+    const DECK = [{"id": 1, "category": "verb", "es": "ser", "en": "to be (essential)", "note": "yo: soy", "exampleEs": "Soy de Puerto Rico.", "exampleEn": "I am from Puerto Rico."}, {"id": 2, "category": "verb", "es": "estar", "en": "to be (state/location)", "note": "yo: estoy", "exampleEs": "Estoy en casa.", "exampleEn": "I am at home."}, {"id": 3, "category": "verb", "es": "tener", "en": "to have", "note": "yo: tengo", "exampleEs": "Tengo tiempo.", "exampleEn": "I have time."}, {"id": 4, "category": "verb", "es": "hacer", "en": "to do / to make", "note": "yo: hago", "exampleEs": "Hago la tarea.", "exampleEn": "I do the homework."}, {"id": 5, "category": "verb", "es": "ir", "en": "to go", "note": "yo: voy", "exampleEs": "Voy al trabajo.", "exampleEn": "I go to work."}, {"id": 6, "category": "verb", "es": "poder", "en": "to be able to / can", "note": "yo: puedo", "exampleEs": "Puedo ayudarte.", "exampleEn": "I can help you."}, {"id": 7, "category": "verb", "es": "querer", "en": "to want / to love", "note": "yo: quiero", "exampleEs": "Quiero agua.", "exampleEn": "I want water."}, {"id": 8, "category": "verb", "es": "decir", "en": "to say / to tell", "note": "yo: digo", "exampleEs": "Te digo mañana.", "exampleEn": "I’ll tell you tomorrow."}, {"id": 9, "category": "verb", "es": "ver", "en": "to see", "note": "yo: veo", "exampleEs": "Veo la guagua.", "exampleEn": "I see the bus."}, {"id": 10, "category": "verb", "es": "dar", "en": "to give", "note": "yo: doy", "exampleEs": "Te doy las gracias.", "exampleEn": "I thank you."}, {"id": 11, "category": "verb", "es": "hablar", "en": "to speak / to talk", "note": "yo: hablo", "exampleEs": "Hablo español.", "exampleEn": "I speak Spanish."}, {"id": 12, "category": "verb", "es": "comer", "en": "to eat", "note": "yo: como", "exampleEs": "Como arroz.", "exampleEn": "I eat rice."}, {"id": 13, "category": "verb", "es": "vivir", "en": "to live", "note": "yo: vivo", "exampleEs": "Vivo en San Juan.", "exampleEn": "I live in San Juan."}, {"id": 14, "category": "verb", "es": "venir", "en": "to come", "note": "yo: vengo", "exampleEs": "Vengo ahora.", "exampleEn": "I’m coming now."}, {"id": 15, "category": "verb", "es": "llevar", "en": "to carry / to wear / to take", "note": "yo: llevo", "exampleEs": "Llevo la mochila.", "exampleEn": "I’m carrying the backpack."}, {"id": 16, "category": "verb", "es": "pasar", "en": "to pass / to happen / to spend time", "note": "yo: paso", "exampleEs": "¿Qué pasa?", "exampleEn": "What’s happening?"}, {"id": 17, "category": "verb", "es": "deber", "en": "to owe / should", "note": "yo: debo", "exampleEs": "Debo estudiar.", "exampleEn": "I should study."}, {"id": 18, "category": "verb", "es": "poner", "en": "to put", "note": "yo: pongo", "exampleEs": "Pongo la mesa.", "exampleEn": "I set the table."}, {"id": 19, "category": "verb", "es": "parecer", "en": "to seem", "note": "yo: parezco", "exampleEs": "Me parece bien.", "exampleEn": "That seems good to me."}, {"id": 20, "category": "verb", "es": "quedar", "en": "to remain / to fit / to meet", "note": "yo: quedo", "exampleEs": "La camisa me queda bien.", "exampleEn": "The shirt fits me well."}, {"id": 21, "category": "verb", "es": "creer", "en": "to believe", "note": "yo: creo", "exampleEs": "Creo que sí.", "exampleEn": "I think so."}, {"id": 22, "category": "verb", "es": "encontrar", "en": "to find", "note": "yo: encuentro", "exampleEs": "Encuentro las llaves.", "exampleEn": "I find the keys."}, {"id": 23, "category": "verb", "es": "llamar", "en": "to call", "note": "yo: llamo", "exampleEs": "Te llamo luego.", "exampleEn": "I’ll call you later."}, {"id": 24, "category": "verb", "es": "necesitar", "en": "to need", "note": "yo: necesito", "exampleEs": "Necesito ayuda.", "exampleEn": "I need help."}, {"id": 25, "category": "verb", "es": "sentir", "en": "to feel", "note": "yo: siento", "exampleEs": "Siento frío.", "exampleEn": "I feel cold."}, {"id": 26, "category": "verb", "es": "dejar", "en": "to leave / to let", "note": "yo: dejo", "exampleEs": "Déjalo aquí.", "exampleEn": "Leave it here."}, {"id": 27, "category": "verb", "es": "salir", "en": "to leave / to go out", "note": "yo: salgo", "exampleEs": "Salgo temprano.", "exampleEn": "I leave early."}, {"id": 28, "category": "verb", "es": "llegar", "en": "to arrive", "note": "yo: llego", "exampleEs": "Llego a las ocho.", "exampleEn": "I arrive at eight."}, {"id": 29, "category": "verb", "es": "saber", "en": "to know (facts/how)", "note": "yo: sé", "exampleEs": "No sé.", "exampleEn": "I don’t know."}, {"id": 30, "category": "verb", "es": "conocer", "en": "to know / to meet", "note": "yo: conozco", "exampleEs": "Conozco a Ana.", "exampleEn": "I know Ana."}, {"id": 31, "category": "verb", "es": "trabajar", "en": "to work", "note": "yo: trabajo", "exampleEs": "Trabajo mañana.", "exampleEn": "I work tomorrow."}, {"id": 32, "category": "verb", "es": "pensar", "en": "to think", "note": "yo: pienso", "exampleEs": "Pienso mucho.", "exampleEn": "I think a lot."}, {"id": 33, "category": "verb", "es": "preguntar", "en": "to ask", "note": "yo: pregunto", "exampleEs": "Pregunto por el baño.", "exampleEn": "I ask for the bathroom."}, {"id": 34, "category": "verb", "es": "entender", "en": "to understand", "note": "yo: entiendo", "exampleEs": "Entiendo un poco.", "exampleEn": "I understand a little."}, {"id": 35, "category": "verb", "es": "bregar", "en": "to deal with / to handle", "note": "PR everyday usage", "exampleEs": "Tengo que bregar con eso.", "exampleEn": "I have to deal with that."}, {"id": 36, "category": "common", "es": "hola", "en": "hello", "note": "", "exampleEs": "Hola, ¿todo bien?", "exampleEn": "Hello, everything good?"}, {"id": 37, "category": "common", "es": "adiós", "en": "goodbye", "note": "", "exampleEs": "Adiós, nos vemos.", "exampleEn": "Bye, see you."}, {"id": 38, "category": "common", "es": "por favor", "en": "please", "note": "", "exampleEs": "Agua, por favor.", "exampleEn": "Water, please."}, {"id": 39, "category": "common", "es": "gracias", "en": "thank you", "note": "", "exampleEs": "Muchas gracias.", "exampleEn": "Thank you very much."}, {"id": 40, "category": "common", "es": "de nada", "en": "you’re welcome", "note": "", "exampleEs": "De nada.", "exampleEn": "You’re welcome."}, {"id": 41, "category": "common", "es": "sí", "en": "yes", "note": "", "exampleEs": "Sí, claro.", "exampleEn": "Yes, of course."}, {"id": 42, "category": "common", "es": "no", "en": "no", "note": "", "exampleEs": "No puedo.", "exampleEn": "I can’t."}, {"id": 43, "category": "common", "es": "hoy", "en": "today", "note": "", "exampleEs": "Hoy estudio.", "exampleEn": "Today I study."}, {"id": 44, "category": "common", "es": "mañana", "en": "tomorrow / morning", "note": "", "exampleEs": "Mañana voy.", "exampleEn": "I’m going tomorrow."}, {"id": 45, "category": "common", "es": "ahora", "en": "now", "note": "", "exampleEs": "Ahora no.", "exampleEn": "Not now."}, {"id": 46, "category": "common", "es": "después", "en": "later / after", "note": "", "exampleEs": "Después te llamo.", "exampleEn": "I’ll call you later."}, {"id": 47, "category": "common", "es": "aquí", "en": "here", "note": "", "exampleEs": "Estoy aquí.", "exampleEn": "I am here."}, {"id": 48, "category": "common", "es": "allí", "en": "there", "note": "", "exampleEs": "Ponlo allí.", "exampleEn": "Put it there."}, {"id": 49, "category": "common", "es": "dónde", "en": "where", "note": "", "exampleEs": "¿Dónde estás?", "exampleEn": "Where are you?"}, {"id": 50, "category": "common", "es": "cuándo", "en": "when", "note": "", "exampleEs": "¿Cuándo llegas?", "exampleEn": "When are you arriving?"}, {"id": 51, "category": "common", "es": "qué", "en": "what", "note": "", "exampleEs": "¿Qué quieres?", "exampleEn": "What do you want?"}, {"id": 52, "category": "common", "es": "quién", "en": "who", "note": "", "exampleEs": "¿Quién es?", "exampleEn": "Who is it?"}, {"id": 53, "category": "common", "es": "cómo", "en": "how", "note": "", "exampleEs": "¿Cómo estás?", "exampleEn": "How are you?"}, {"id": 54, "category": "common", "es": "por qué", "en": "why", "note": "", "exampleEs": "¿Por qué no?", "exampleEn": "Why not?"}, {"id": 55, "category": "common", "es": "porque", "en": "because", "note": "", "exampleEs": "Porque sí.", "exampleEn": "Because yes."}, {"id": 56, "category": "common", "es": "yo", "en": "I", "note": "", "exampleEs": "Yo puedo.", "exampleEn": "I can."}, {"id": 57, "category": "common", "es": "tú", "en": "you (informal)", "note": "", "exampleEs": "¿Tú vienes?", "exampleEn": "Are you coming?"}, {"id": 58, "category": "common", "es": "usted", "en": "you (formal)", "note": "", "exampleEs": "¿Usted necesita ayuda?", "exampleEn": "Do you need help?"}, {"id": 59, "category": "common", "es": "ustedes", "en": "you all", "note": "", "exampleEs": "¿Ustedes vienen?", "exampleEn": "Are you all coming?"}, {"id": 60, "category": "common", "es": "nosotros", "en": "we", "note": "", "exampleEs": "Nosotros vamos.", "exampleEn": "We are going."}, {"id": 61, "category": "common", "es": "ellos", "en": "they", "note": "", "exampleEs": "Ellos trabajan.", "exampleEn": "They work."}, {"id": 62, "category": "common", "es": "mi", "en": "my", "note": "", "exampleEs": "Mi casa.", "exampleEn": "My house."}, {"id": 63, "category": "common", "es": "tu", "en": "your", "note": "", "exampleEs": "Tu carro.", "exampleEn": "Your car."}, {"id": 64, "category": "common", "es": "su", "en": "his/her/your/their", "note": "", "exampleEs": "Su teléfono.", "exampleEn": "His/her/your/their phone."}, {"id": 65, "category": "common", "es": "casa", "en": "house / home", "note": "", "exampleEs": "Estoy en casa.", "exampleEn": "I am at home."}, {"id": 66, "category": "common", "es": "carro", "en": "car", "note": "", "exampleEs": "El carro está aquí.", "exampleEn": "The car is here."}, {"id": 67, "category": "common", "es": "trabajo", "en": "work / job", "note": "", "exampleEs": "Tengo trabajo.", "exampleEn": "I have work."}, {"id": 68, "category": "common", "es": "escuela", "en": "school", "note": "", "exampleEs": "La escuela está lejos.", "exampleEn": "The school is far."}, {"id": 69, "category": "common", "es": "agua", "en": "water", "note": "", "exampleEs": "Quiero agua.", "exampleEn": "I want water."}, {"id": 70, "category": "common", "es": "comida", "en": "food", "note": "", "exampleEs": "La comida está buena.", "exampleEn": "The food is good."}, {"id": 71, "category": "common", "es": "dinero", "en": "money", "note": "", "exampleEs": "No tengo dinero.", "exampleEn": "I don’t have money."}, {"id": 72, "category": "common", "es": "tiempo", "en": "time / weather", "note": "", "exampleEs": "No tengo tiempo.", "exampleEn": "I don’t have time."}, {"id": 73, "category": "common", "es": "amigo", "en": "friend", "note": "", "exampleEs": "Mi amigo llega hoy.", "exampleEn": "My friend arrives today."}, {"id": 74, "category": "common", "es": "familia", "en": "family", "note": "", "exampleEs": "Mi familia vive aquí.", "exampleEn": "My family lives here."}, {"id": 75, "category": "common", "es": "día", "en": "day", "note": "", "exampleEs": "Buen día.", "exampleEn": "Good day."}, {"id": 76, "category": "common", "es": "noche", "en": "night", "note": "", "exampleEs": "Buenas noches.", "exampleEn": "Good night."}, {"id": 77, "category": "common", "es": "baño", "en": "bathroom", "note": "", "exampleEs": "¿Dónde está el baño?", "exampleEn": "Where is the bathroom?"}, {"id": 78, "category": "common", "es": "calle", "en": "street", "note": "", "exampleEs": "La calle está llena.", "exampleEn": "The street is full."}, {"id": 79, "category": "common", "es": "tienda", "en": "store", "note": "", "exampleEs": "Voy a la tienda.", "exampleEn": "I’m going to the store."}, {"id": 80, "category": "common", "es": "grande", "en": "big", "note": "", "exampleEs": "Es grande.", "exampleEn": "It is big."}, {"id": 81, "category": "common", "es": "pequeño", "en": "small", "note": "", "exampleEs": "Es pequeño.", "exampleEn": "It is small."}, {"id": 82, "category": "common", "es": "bueno", "en": "good", "note": "", "exampleEs": "Está bueno.", "exampleEn": "It’s good."}, {"id": 83, "category": "common", "es": "malo", "en": "bad", "note": "", "exampleEs": "Eso es malo.", "exampleEn": "That is bad."}, {"id": 84, "category": "common", "es": "nuevo", "en": "new", "note": "", "exampleEs": "Es nuevo.", "exampleEn": "It’s new."}, {"id": 85, "category": "common", "es": "viejo", "en": "old", "note": "", "exampleEs": "Ese edificio es viejo.", "exampleEn": "That building is old."}, {"id": 86, "category": "common", "es": "rápido", "en": "fast", "note": "", "exampleEs": "Hablas rápido.", "exampleEn": "You speak fast."}, {"id": 87, "category": "common", "es": "lento", "en": "slow", "note": "", "exampleEs": "Más lento, por favor.", "exampleEn": "Slower, please."}, {"id": 88, "category": "common", "es": "siempre", "en": "always", "note": "", "exampleEs": "Siempre estudio.", "exampleEn": "I always study."}, {"id": 89, "category": "common", "es": "nunca", "en": "never", "note": "", "exampleEs": "Nunca digo eso.", "exampleEn": "I never say that."}, {"id": 90, "category": "common", "es": "también", "en": "also", "note": "", "exampleEs": "Yo también.", "exampleEn": "Me too."}, {"id": 91, "category": "common", "es": "pero", "en": "but", "note": "", "exampleEs": "Quiero ir, pero no puedo.", "exampleEn": "I want to go, but I can’t."}, {"id": 92, "category": "puerto_rico", "es": "guagua", "en": "bus", "note": "PR everyday word; standard: autobús", "exampleEs": "La guagua viene ahora.", "exampleEn": "The bus is coming now."}, {"id": 93, "category": "puerto_rico", "es": "china", "en": "orange", "note": "In Puerto Rico, china = orange (fruit).", "exampleEs": "Quiero jugo de china.", "exampleEn": "I want orange juice."}, {"id": 94, "category": "puerto_rico", "es": "zafacón", "en": "trash can", "note": "PR everyday word; standard: basurero/papelera", "exampleEs": "Pon eso en el zafacón.", "exampleEn": "Put that in the trash can."}, {"id": 95, "category": "puerto_rico", "es": "guineo", "en": "banana", "note": "Common Caribbean usage.", "exampleEs": "Compré guineos.", "exampleEn": "I bought bananas."}, {"id": 96, "category": "puerto_rico", "es": "habichuelas", "en": "beans", "note": "Very common PR word.", "exampleEs": "Hoy comí arroz con habichuelas.", "exampleEn": "Today I ate rice with beans."}, {"id": 97, "category": "puerto_rico", "es": "nevera", "en": "fridge", "note": "Common in PR and much of the Caribbean.", "exampleEs": "La agua está en la nevera.", "exampleEn": "The water is in the fridge."}, {"id": 98, "category": "puerto_rico", "es": "mahones", "en": "jeans", "note": "PR everyday word.", "exampleEs": "Me pongo los mahones.", "exampleEn": "I’m putting on my jeans."}, {"id": 99, "category": "puerto_rico", "es": "chavos", "en": "money / bucks", "note": "Casual everyday word.", "exampleEs": "No tengo chavos.", "exampleEn": "I don’t have money."}, {"id": 100, "category": "puerto_rico", "es": "parquear", "en": "to park", "note": "English-influenced form; standard: estacionar", "exampleEs": "Voy a parquear aquí.", "exampleEn": "I’m going to park here."}, {"id": 101, "category": "puerto_rico", "es": "janguear", "en": "to hang out", "note": "From English 'hang out'; casual.", "exampleEs": "Vamos a janguear luego.", "exampleEn": "Let’s hang out later."}, {"id": 102, "category": "puerto_rico", "es": "pana", "en": "friend / buddy", "note": "Very common casual word.", "exampleEs": "Él es mi pana.", "exampleEn": "He’s my buddy."}, {"id": 103, "category": "puerto_rico", "es": "corillo", "en": "friend group / crew", "note": "Casual.", "exampleEs": "Salí con mi corillo.", "exampleEn": "I went out with my crew."}, {"id": 104, "category": "puerto_rico", "es": "nítido", "en": "cool / neat / nice", "note": "Casual positive adjective.", "exampleEs": "Eso está nítido.", "exampleEn": "That’s cool."}, {"id": 105, "category": "puerto_rico", "es": "brutal", "en": "awesome / amazing", "note": "Very common positive PR usage.", "exampleEs": "La playa estuvo brutal.", "exampleEn": "The beach was awesome."}, {"id": 106, "category": "puerto_rico", "es": "bregar", "en": "to deal with / handle", "note": "High-utility PR verb.", "exampleEs": "Déjame bregar con eso.", "exampleEn": "Let me handle that."}, {"id": 107, "category": "puerto_rico", "es": "boricua", "en": "Puerto Rican", "note": "From Borikén.", "exampleEs": "Soy boricua.", "exampleEn": "I’m Puerto Rican."}, {"id": 108, "category": "puerto_rico", "es": "mapo", "en": "mop", "note": "PR household word.", "exampleEs": "Busca el mapo.", "exampleEn": "Get the mop."}, {"id": 109, "category": "puerto_rico", "es": "jugo de china", "en": "orange juice", "note": "Very common everyday phrase.", "exampleEs": "Tomé jugo de china.", "exampleEn": "I drank orange juice."}];
+    const STORAGE_KEY = "boricua_flashcards_v1";
+    const XP_GOAL = 100;
+    const BOX_INTERVALS_HOURS = {1: 0, 2: 12, 3: 36, 4: 96, 5: 168};
+
+    const categoryLabel = {
+      verb: "Verb",
+      common: "Common word",
+      puerto_rico: "Puerto Rico"
+    };
+
+    const defaultState = () => {
+      const progress = {};
+      for (const c of DECK) {
+        progress[c.id] = {
+          box: 1,
+          dueAt: 0,
+          seen: 0,
+          correct: 0,
+          wrong: 0,
+          lastSeen: 0
+        };
+      }
+      return {
+        xp: 0,
+        streak: 0,
+        bestStreak: 0,
+        reviewed: 0,
+        quizAnswered: 0,
+        quizCorrect: 0,
+        dailyXp: {},
+        settings: {
+          direction: "en-es",
+          includePR: true,
+          dueOnly: false
+        },
+        progress
+      };
+    };
+
+    let state = loadState();
+    let currentFilter = "all";
+    let currentStudyCard = null;
+    let studyRevealed = false;
+    let currentQuizCard = null;
+    let quizOptions = [];
+    let quizAnswered = false;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        const base = defaultState();
+        const merged = {
+          ...base,
+          ...parsed,
+          settings: {...base.settings, ...(parsed.settings || {})},
+          progress: {...base.progress, ...(parsed.progress || {})}
+        };
+        for (const c of DECK) {
+          if (!merged.progress[c.id]) merged.progress[c.id] = base.progress[c.id];
+        }
+        return merged;
+      } catch (e) {
+        return defaultState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function todayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    }
+
+    function getTodayXp() {
+      return state.dailyXp[todayKey()] || 0;
+    }
+
+    function setTodayXp(xp) {
+      state.dailyXp[todayKey()] = xp;
+    }
+
+    function earnXp(amount, message = `+${amount} XP`) {
+      state.xp += amount;
+      setTodayXp(getTodayXp() + amount);
+      burst(message);
+    }
+
+    function burst(message) {
+      const el = document.getElementById("scoreBurst");
+      el.textContent = message;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 1000);
+    }
+
+    function levelFromXp(xp) {
+      return Math.floor(xp / 120) + 1;
+    }
+
+    function accuracy() {
+      const total = state.quizAnswered || state.reviewed;
+      const correct = state.quizAnswered ? state.quizCorrect : total ? sumProgress("correct") : 0;
+      if (!total) return 0;
+      return Math.round((correct / total) * 100);
+    }
+
+    function sumProgress(field) {
+      return Object.values(state.progress).reduce((sum, item) => sum + (item[field] || 0), 0);
+    }
+
+    function getDeck() {
+      return DECK.filter(c => state.settings.includePR || c.category !== "puerto_rico");
+    }
+
+    function dueNow(card) {
+      return (state.progress[card.id]?.dueAt || 0) <= Date.now();
+    }
+
+    function getFilteredDeck(filter = currentFilter) {
+      let deck = getDeck();
+      if (state.settings.dueOnly && filter === "all") {
+        filter = "due";
+      }
+      if (filter === "due") return deck.filter(dueNow);
+      if (filter === "all") return deck;
+      return deck.filter(c => c.category === filter);
+    }
+
+    function shuffle(arr) {
+      const clone = [...arr];
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
+    }
+
+    function pickStudyCard() {
+      let pool = getFilteredDeck();
+      if (!pool.length) pool = getDeck();
+      pool = shuffle(pool).sort((a, b) => {
+        const pa = state.progress[a.id];
+        const pb = state.progress[b.id];
+        return (pa.box + pa.correct - pa.wrong) - (pb.box + pb.correct - pb.wrong);
+      });
+      currentStudyCard = pool[0] || null;
+      studyRevealed = false;
+      renderStudyCard();
+    }
+
+    function displayPrompt(card) {
+      return state.settings.direction === "en-es" ? card.en : card.es;
+    }
+
+    function displayAnswer(card) {
+      return state.settings.direction === "en-es" ? card.es : card.en;
+    }
+
+    function displayMeta(card) {
+      const note = card.note ? card.note : "";
+      const standard = card.category === "puerto_rico" && state.settings.direction === "en-es"
+        ? "Puerto Rico usage"
+        : "";
+      return [note, standard].filter(Boolean).join(" • ");
+    }
+
+    function displayExample(card) {
+      return state.settings.direction === "en-es"
+        ? `${card.exampleEs}<br><span class="muted">${card.exampleEn}</span>`
+        : `${card.exampleEn}<br><span class="muted">${card.exampleEs}</span>`;
+    }
+
+    function renderStudyCard() {
+      const prompt = document.getElementById("studyPrompt");
+      const answerBlock = document.getElementById("studyAnswerBlock");
+      const answer = document.getElementById("studyAnswer");
+      const meta = document.getElementById("studyMeta");
+      const example = document.getElementById("studyExample");
+      const tag = document.getElementById("studyTag");
+      const showBtn = document.getElementById("showAnswerBtn");
+      const reviewBtn = document.getElementById("reviewBtn");
+      const gotItBtn = document.getElementById("gotItBtn");
+      if (!currentStudyCard) {
+        prompt.textContent = "No cards found.";
+        answerBlock.classList.add("hidden");
+        showBtn.classList.add("hidden");
+        reviewBtn.classList.add("hidden");
+        gotItBtn.classList.add("hidden");
+        return;
+      }
+      prompt.textContent = displayPrompt(currentStudyCard);
+      tag.textContent = categoryLabel[currentStudyCard.category] || "Card";
+      if (studyRevealed) {
+        answer.textContent = displayAnswer(currentStudyCard);
+        meta.textContent = displayMeta(currentStudyCard);
+        example.innerHTML = displayExample(currentStudyCard);
+        answerBlock.classList.remove("hidden");
+        showBtn.classList.add("hidden");
+        reviewBtn.classList.remove("hidden");
+        gotItBtn.classList.remove("hidden");
+        document.getElementById("studyActions").classList.remove("single");
+      } else {
+        answerBlock.classList.add("hidden");
+        showBtn.classList.remove("hidden");
+        reviewBtn.classList.add("hidden");
+        gotItBtn.classList.add("hidden");
+        document.getElementById("studyActions").classList.add("single");
+      }
+    }
+
+    function markCard(card, success, source="study") {
+      const p = state.progress[card.id];
+      p.seen += 1;
+      p.lastSeen = Date.now();
+      state.reviewed += 1;
+      if (source === "quiz") state.quizAnswered += 1;
+      if (success) {
+        p.correct += 1;
+        p.box = Math.min(5, p.box + 1);
+        p.dueAt = Date.now() + (BOX_INTERVALS_HOURS[p.box] * 60 * 60 * 1000);
+        state.streak += 1;
+        state.bestStreak = Math.max(state.bestStreak, state.streak);
+        if (source === "quiz") state.quizCorrect += 1;
+        earnXp(source === "quiz" ? 12 : 8);
+      } else {
+        p.wrong += 1;
+        p.box = 1;
+        p.dueAt = Date.now();
+        state.streak = 0;
+        if (source === "quiz") earnXp(2, "+2 XP for trying");
+      }
+      saveState();
+      updateUI();
+    }
+
+    function buildQuizCard() {
+      const deck = getDeck();
+      const dueDeck = deck.filter(dueNow);
+      const pool = dueDeck.length >= 4 ? dueDeck : deck;
+      currentQuizCard = shuffle(pool).sort((a, b) => state.progress[a.id].box - state.progress[b.id].box)[0];
+      const others = shuffle(deck.filter(c => c.id !== currentQuizCard.id)).slice(0, 3);
+      quizOptions = shuffle([currentQuizCard, ...others]);
+      quizAnswered = false;
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const promptEl = document.getElementById("quizPrompt");
+      const tagEl = document.getElementById("quizTag");
+      const choicesEl = document.getElementById("quizChoices");
+      const feedbackEl = document.getElementById("quizFeedback");
+      const exEl = document.getElementById("quizExample");
+      const nextBtn = document.getElementById("nextQuizBtn");
+      const startBtn = document.getElementById("startQuizBtn");
+
+      if (!currentQuizCard) {
+        promptEl.textContent = "Tap Start Quiz";
+        tagEl.textContent = "Quiz";
+        choicesEl.classList.add("hidden");
+        feedbackEl.classList.add("hidden");
+        exEl.classList.add("hidden");
+        nextBtn.classList.add("hidden");
+        startBtn.classList.remove("hidden");
+        return;
+      }
+
+      promptEl.textContent = displayPrompt(currentQuizCard);
+      tagEl.textContent = categoryLabel[currentQuizCard.category] + " quiz";
+      choicesEl.innerHTML = "";
+      choicesEl.classList.remove("hidden");
+      feedbackEl.classList.add("hidden");
+      exEl.classList.add("hidden");
+      nextBtn.classList.add("hidden");
+      startBtn.classList.add("hidden");
+
+      for (const option of quizOptions) {
+        const btn = document.createElement("button");
+        btn.className = "quiz-choice";
+        btn.textContent = displayAnswer(option);
+        btn.addEventListener("click", () => answerQuiz(option.id, btn));
+        choicesEl.appendChild(btn);
+      }
+    }
+
+    function answerQuiz(optionId, clickedBtn) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      const choices = [...document.querySelectorAll(".quiz-choice")];
+      const correctId = currentQuizCard.id;
+      const feedbackEl = document.getElementById("quizFeedback");
+      const exEl = document.getElementById("quizExample");
+      for (const btn of choices) {
+        const isCorrect = btn.textContent === displayAnswer(currentQuizCard);
+        if (isCorrect) btn.classList.add("correct");
+      }
+      const success = optionId === correctId;
+      if (!success) clickedBtn.classList.add("wrong");
+
+      markCard(currentQuizCard, success, "quiz");
+      feedbackEl.classList.remove("hidden");
+      exEl.classList.remove("hidden");
+      feedbackEl.innerHTML = success
+        ? `Correct. ${displayAnswer(currentQuizCard)}`
+        : `Not quite. Correct answer: <strong>${displayAnswer(currentQuizCard)}</strong>`;
+      exEl.innerHTML = `${displayMeta(currentQuizCard)}<br><br>${displayExample(currentQuizCard)}`;
+      document.getElementById("nextQuizBtn").classList.remove("hidden");
+    }
+
+    function updateMeters() {
+      const today = getTodayXp();
+      const pct = Math.min(100, Math.round((today / XP_GOAL) * 100));
+      document.getElementById("goalMeter").style.width = pct + "%";
+      document.getElementById("goalText").textContent = `${today} / ${XP_GOAL} XP today`;
+      document.getElementById("progressGoalMeter").style.width = pct + "%";
+      document.getElementById("todayGoalPct").textContent = pct + "%";
+
+      const deck = getDeck();
+      const mastered = deck.filter(c => state.progress[c.id].box >= 4).length;
+      const masteryPct = deck.length ? Math.round((mastered / deck.length) * 100) : 0;
+      document.getElementById("masteredCount").textContent = `${mastered} / ${deck.length} mastered`;
+      document.getElementById("masteryMeter").style.width = masteryPct + "%";
+
+      const byCat = ["verb","common","puerto_rico"];
+      for (const cat of byCat) {
+        const cards = deck.filter(c => c.category === cat);
+        const masteredCat = cards.filter(c => state.progress[c.id].box >= 4).length;
+        const catPct = cards.length ? Math.round((masteredCat / cards.length) * 100) : 0;
+        const key = cat === "verb" ? "verb" : cat === "common" ? "common" : "pr";
+        document.getElementById(key + "Pct").textContent = cards.length ? `${catPct}%` : "Off";
+        document.getElementById(key + "Meter").style.width = catPct + "%";
+      }
+    }
+
+    function badgeList() {
+      const deck = getDeck();
+      const mastered = deck.filter(c => state.progress[c.id].box >= 4).length;
+      const prMastered = deck.filter(c => c.category === "puerto_rico" && state.progress[c.id].box >= 4).length;
+      const badges = [];
+      if (state.xp >= 50) badges.push("First 50 XP");
+      if (state.xp >= 250) badges.push("On a roll");
+      if (state.bestStreak >= 7) badges.push("7-card streak");
+      if (state.bestStreak >= 15) badges.push("15-card streak");
+      if (mastered >= 10) badges.push("10 mastered");
+      if (mastered >= 30) badges.push("30 mastered");
+      if (prMastered >= 8) badges.push("Boricua basics");
+      if (accuracy() >= 85 && state.quizAnswered >= 10) badges.push("Sharp recall");
+      return badges;
+    }
+
+    function renderBadges() {
+      const wrap = document.getElementById("badges");
+      const badges = badgeList();
+      wrap.innerHTML = badges.length
+        ? badges.map(b => `<div class="badge">${b}</div>`).join("")
+        : `<div class="muted small">No badges yet. Start with a few study rounds or a quick quiz.</div>`;
+    }
+
+    function renderWeakCards() {
+      const weak = getDeck()
+        .map(c => ({
+          card: c,
+          wrong: state.progress[c.id].wrong,
+          seen: state.progress[c.id].seen
+        }))
+        .filter(x => x.wrong > 0)
+        .sort((a,b) => b.wrong - a.wrong || a.seen - b.seen)
+        .slice(0,5);
+
+      const el = document.getElementById("weakCards");
+      if (!weak.length) {
+        el.textContent = "No misses yet. Nice.";
+        return;
+      }
+      el.innerHTML = weak.map(x => `• ${x.card.es} — ${x.card.en} (${x.wrong} misses)`).join("<br>");
+    }
+
+    function updateUI() {
+      document.getElementById("levelValue").textContent = levelFromXp(state.xp);
+      document.getElementById("xpValue").textContent = state.xp;
+      document.getElementById("streakValue").textContent = state.streak;
+      document.getElementById("accuracyValue").textContent = accuracy() + "%";
+      document.getElementById("dueNowValue").textContent = getDeck().filter(dueNow).length;
+      document.getElementById("reviewedValue").textContent = state.reviewed;
+      document.getElementById("bestStreakValue").textContent = state.bestStreak;
+      document.getElementById("directionBtn").textContent = state.settings.direction === "en-es" ? "EN → ES" : "ES → EN";
+      document.getElementById("prToggle").classList.toggle("on", state.settings.includePR);
+      document.getElementById("dueToggle").classList.toggle("on", state.settings.dueOnly);
+      updateMeters();
+      renderBadges();
+      renderWeakCards();
+      renderStudyCard();
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+      document.getElementById(name + "Tab").classList.remove("hidden");
+      if (name === "progress") {
+        updateUI();
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+    });
+
+    document.querySelectorAll(".chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentFilter = chip.dataset.filter;
+        pickStudyCard();
+      });
+    });
+
+    document.getElementById("studyNowBtn").addEventListener("click", () => {
+      switchTab("study");
+      pickStudyCard();
+    });
+
+    document.getElementById("showAnswerBtn").addEventListener("click", () => {
+      studyRevealed = true;
+      renderStudyCard();
+    });
+
+    document.getElementById("reviewBtn").addEventListener("click", () => {
+      if (!currentStudyCard) return;
+      markCard(currentStudyCard, false, "study");
+      pickStudyCard();
+    });
+
+    document.getElementById("gotItBtn").addEventListener("click", () => {
+      if (!currentStudyCard) return;
+      markCard(currentStudyCard, true, "study");
+      pickStudyCard();
+    });
+
+    document.getElementById("skipBtn").addEventListener("click", pickStudyCard);
+    document.getElementById("shuffleBtn").addEventListener("click", pickStudyCard);
+    document.getElementById("startQuizBtn").addEventListener("click", buildQuizCard);
+    document.getElementById("nextQuizBtn").addEventListener("click", buildQuizCard);
+
+    document.getElementById("directionBtn").addEventListener("click", () => {
+      state.settings.direction = state.settings.direction === "en-es" ? "es-en" : "en-es";
+      saveState();
+      if (currentQuizCard) renderQuiz();
+      renderStudyCard();
+      updateUI();
+    });
+
+    document.getElementById("prToggle").addEventListener("click", () => {
+      state.settings.includePR = !state.settings.includePR;
+      saveState();
+      currentQuizCard = null;
+      if (currentFilter === "puerto_rico" && !state.settings.includePR) {
+        currentFilter = "all";
+        document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.filter === "all"));
+      }
+      pickStudyCard();
+      updateUI();
+    });
+
+    document.getElementById("dueToggle").addEventListener("click", () => {
+      state.settings.dueOnly = !state.settings.dueOnly;
+      saveState();
+      pickStudyCard();
+      updateUI();
+    });
+
+    document.getElementById("resetProgressBtn").addEventListener("click", () => {
+      const ok = confirm("Reset all saved progress on this device?");
+      if (!ok) return;
+      state = defaultState();
+      saveState();
+      currentQuizCard = null;
+      pickStudyCard();
+      renderQuiz();
+      updateUI();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], {type: "application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "boricua-flashcards-progress.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    document.getElementById("importBtn").addEventListener("click", () => {
+      document.getElementById("importFile").click();
+    });
+
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const imported = JSON.parse(text);
+        const base = defaultState();
+        state = {
+          ...base,
+          ...imported,
+          settings: {...base.settings, ...(imported.settings || {})},
+          progress: {...base.progress, ...(imported.progress || {})}
+        };
+        saveState();
+        pickStudyCard();
+        renderQuiz();
+        updateUI();
+        burst("Progress imported");
+      } catch (err) {
+        alert("Could not import that file.");
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+
+    pickStudyCard();
+    renderQuiz();
+    updateUI();
+  </script>
+</body>
+</html>
