@@ -3,24 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b1220" />
+  <meta name="theme-color" content="#0050a4" />
   <title>Boricua Flashcards</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <style>
     :root {
-      --bg: #09101c;
-      --panel: #111a2b;
-      --panel-2: #162238;
-      --text: #f3f5f9;
-      --muted: #aeb8c9;
-      --line: rgba(255,255,255,.08);
-      --good: #22c55e;
-      --warn: #f59e0b;
-      --bad: #ef4444;
-      --accent: #60a5fa;
-      --accent-2: #a78bfa;
-      --chip: rgba(255,255,255,.06);
-      --shadow: 0 14px 34px rgba(0,0,0,.28);
+      --bg: #f3fbff;
+      --panel: rgba(255,255,255,.9);
+      --panel-2: #fff2c2;
+      --text: #16213a;
+      --muted: #596978;
+      --line: rgba(0,80,164,.16);
+      --good: #10845c;
+      --warn: #f7b731;
+      --bad: #d92736;
+      --accent: #0050a4;
+      --accent-2: #ed1b2f;
+      --coral: #ff6f61;
+      --yellow: #ffd166;
+      --teal: #00a6a6;
+      --sea: #008ecf;
+      --chip: rgba(255,255,255,.72);
+      --shadow: 0 16px 34px rgba(0,80,164,.16);
       --radius: 22px;
       --radius-sm: 14px;
     }
@@ -30,12 +34,13 @@
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(96,165,250,.18), transparent 25%),
-        radial-gradient(circle at top left, rgba(167,139,250,.12), transparent 22%),
-        linear-gradient(180deg, #0a1323 0%, var(--bg) 100%);
+        linear-gradient(135deg, rgba(0,80,164,.2) 0 8%, transparent 8% 100%),
+        repeating-linear-gradient(90deg, rgba(255,209,102,.18) 0 58px, rgba(255,111,97,.14) 58px 116px, rgba(0,166,166,.14) 116px 174px, rgba(255,255,255,.08) 174px 232px),
+        linear-gradient(180deg, #72d6ff 0%, #edfaff 32%, #fff7df 100%);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      background-attachment: fixed;
     }
     .app {
       max-width: 960px;
@@ -51,6 +56,12 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 14px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(255,255,255,.74);
+      border-radius: 24px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
     .brand {
       display: flex;
@@ -62,18 +73,39 @@
       width: 52px;
       height: 52px;
       border-radius: 18px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      background:
+        linear-gradient(90deg, transparent 0 40%, rgba(255,255,255,.96) 40% 100%),
+        repeating-linear-gradient(180deg, var(--accent-2) 0 10px, #fff 10px 20px);
+      border: 2px solid #fff;
       display: grid;
       place-items: center;
       font-size: 28px;
       box-shadow: var(--shadow);
       flex: 0 0 auto;
+      color: #fff;
+      font-weight: 900;
+      overflow: hidden;
+      position: relative;
+      text-shadow: 0 2px 8px rgba(0,0,0,.28);
+    }
+    .logo::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 62%;
+      background: linear-gradient(135deg, var(--accent), #0074d9);
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+    .logo::after {
+      content: "Ñ";
+      position: relative;
+      z-index: 1;
     }
     h1 {
       margin: 0;
       font-size: 1.2rem;
       line-height: 1.15;
-      letter-spacing: -.02em;
+      letter-spacing: 0;
     }
     .sub {
       margin-top: 4px;
@@ -87,29 +119,31 @@
       font-size: .98rem;
       font-weight: 700;
       color: var(--text);
-      background: var(--panel-2);
+      background: #fff7d7;
+      border: 1px solid rgba(0,80,164,.14);
       cursor: pointer;
-      transition: transform .08s ease, opacity .15s ease, background .15s ease;
+      transition: transform .08s ease, opacity .15s ease, background .15s ease, box-shadow .15s ease;
       -webkit-tap-highlight-color: transparent;
     }
+    button:hover { box-shadow: 0 10px 22px rgba(0,80,164,.14); }
     button:active { transform: translateY(1px) scale(.995); }
     button.secondary {
-      background: var(--chip);
+      background: rgba(255,255,255,.76);
       color: var(--text);
       border: 1px solid var(--line);
     }
     button.good {
-      background: rgba(34,197,94,.18);
-      color: #d8ffe4;
-      border: 1px solid rgba(34,197,94,.25);
+      background: rgba(16,132,92,.13);
+      color: #07593d;
+      border: 1px solid rgba(16,132,92,.3);
     }
     button.bad {
-      background: rgba(239,68,68,.16);
-      color: #ffe0e0;
-      border: 1px solid rgba(239,68,68,.22);
+      background: rgba(217,39,54,.12);
+      color: #8e1020;
+      border: 1px solid rgba(217,39,54,.28);
     }
     button.accent {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      background: linear-gradient(135deg, var(--accent) 0%, var(--sea) 48%, var(--accent-2) 100%);
       color: white;
       box-shadow: var(--shadow);
     }
@@ -120,12 +154,13 @@
       margin-bottom: 14px;
     }
     .stat {
-      background: rgba(17,26,43,.8);
-      backdrop-filter: blur(8px);
+      background: rgba(255,255,255,.84);
+      backdrop-filter: blur(10px);
       border: 1px solid var(--line);
       border-radius: 18px;
       padding: 12px;
       box-shadow: var(--shadow);
+      border-bottom: 4px solid rgba(255,111,97,.36);
     }
     .stat-label {
       color: var(--muted);
@@ -135,14 +170,14 @@
     .stat-value {
       font-size: 1.12rem;
       font-weight: 800;
-      letter-spacing: -.02em;
+      letter-spacing: 0;
     }
     .tabs {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      background: rgba(17,26,43,.75);
-      border: 1px solid var(--line);
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(255,255,255,.76);
       padding: 8px;
       border-radius: 20px;
       margin-bottom: 14px;
@@ -161,17 +196,18 @@
       cursor: pointer;
     }
     .tab.active {
-      background: var(--panel-2);
-      color: var(--text);
-      box-shadow: inset 0 0 0 1px var(--line);
+      background: linear-gradient(135deg, #fff, #fff2c2);
+      color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--line), 0 8px 16px rgba(0,80,164,.1);
     }
     .panel {
-      background: rgba(17,26,43,.8);
-      border: 1px solid var(--line);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.78);
       border-radius: var(--radius);
       padding: 16px;
       box-shadow: var(--shadow);
       margin-bottom: 14px;
+      backdrop-filter: blur(12px);
     }
     .toolbar {
       display: flex;
@@ -191,17 +227,17 @@
       user-select: none;
     }
     .chip.active {
-      background: rgba(96,165,250,.16);
-      color: #dbeafe;
-      border-color: rgba(96,165,250,.35);
+      background: linear-gradient(135deg, rgba(0,80,164,.12), rgba(255,209,102,.48));
+      color: var(--accent);
+      border-color: rgba(0,80,164,.28);
     }
     .card {
       position: relative;
       border-radius: 26px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)),
-        linear-gradient(135deg, rgba(96,165,250,.12), rgba(167,139,250,.12));
-      border: 1px solid var(--line);
+        linear-gradient(135deg, rgba(255,255,255,.92), rgba(255,248,220,.9)),
+        repeating-linear-gradient(90deg, rgba(0,80,164,.08) 0 18px, rgba(237,27,47,.08) 18px 36px, rgba(255,209,102,.1) 36px 54px);
+      border: 1px solid rgba(0,80,164,.18);
       min-height: 270px;
       padding: 18px;
       display: flex;
@@ -212,10 +248,9 @@
     .card::after {
       content: "";
       position: absolute;
-      inset: auto -80px -80px auto;
-      width: 180px;
-      height: 180px;
-      background: radial-gradient(circle, rgba(96,165,250,.16), transparent 68%);
+      inset: auto 0 0 0;
+      height: 7px;
+      background: linear-gradient(90deg, var(--accent), #fff 26%, var(--accent-2) 48%, var(--yellow) 70%, var(--teal));
       pointer-events: none;
     }
     .tag {
@@ -224,9 +259,9 @@
       gap: 6px;
       padding: 7px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,.06);
+      background: rgba(0,166,166,.12);
       border: 1px solid var(--line);
-      color: var(--muted);
+      color: #087475;
       font-size: .82rem;
       font-weight: 700;
       width: fit-content;
@@ -235,13 +270,13 @@
       font-size: clamp(1.55rem, 4vw, 2.15rem);
       font-weight: 800;
       line-height: 1.1;
-      letter-spacing: -.03em;
+      letter-spacing: 0;
       margin: 16px 0 8px;
     }
     .answer {
       font-size: clamp(1.35rem, 3.6vw, 1.75rem);
       font-weight: 800;
-      color: #dbeafe;
+      color: var(--accent);
       line-height: 1.15;
       margin-bottom: 10px;
     }
@@ -254,9 +289,60 @@
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px solid var(--line);
-      color: #d8dfeb;
+      color: var(--text);
       font-size: .96rem;
       line-height: 1.48;
+    }
+    .example-list {
+      display: grid;
+      gap: 10px;
+    }
+    .example-row {
+      display: grid;
+      gap: 3px;
+      padding: 10px 11px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(0,80,164,.12);
+    }
+    .example-label {
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .example-es {
+      font-weight: 750;
+    }
+    .example-en {
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .quiz-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .select-label {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: .94rem;
+    }
+    select {
+      width: min(100%, 230px);
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background:
+        linear-gradient(45deg, transparent 50%, var(--accent) 50%) calc(100% - 18px) 50% / 8px 8px no-repeat,
+        linear-gradient(135deg, #fff, #fff2c2);
+      color: var(--text);
+      font: inherit;
+      font-weight: 800;
+      padding: 12px 40px 12px 14px;
+      box-shadow: 0 8px 18px rgba(0,80,164,.09);
     }
     .actions {
       display: grid;
@@ -274,23 +360,23 @@
       text-align: left;
       border-radius: 16px;
       padding: 14px;
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.74);
       border: 1px solid var(--line);
       color: var(--text);
       font-weight: 700;
     }
     .quiz-choice.correct {
-      background: rgba(34,197,94,.18);
-      border-color: rgba(34,197,94,.3);
+      background: rgba(16,132,92,.13);
+      border-color: rgba(16,132,92,.32);
     }
     .quiz-choice.wrong {
-      background: rgba(239,68,68,.15);
-      border-color: rgba(239,68,68,.3);
+      background: rgba(217,39,54,.12);
+      border-color: rgba(217,39,54,.34);
     }
     .meter {
       width: 100%;
       height: 12px;
-      background: rgba(255,255,255,.06);
+      background: rgba(0,80,164,.09);
       border-radius: 999px;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -299,7 +385,7 @@
       display: block;
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      background: linear-gradient(90deg, var(--accent), var(--sea), var(--yellow), var(--accent-2));
       border-radius: inherit;
     }
     .grid-2 {
@@ -312,7 +398,7 @@
       gap: 10px;
     }
     .mini-item {
-      background: rgba(255,255,255,.04);
+      background: rgba(255,255,255,.58);
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 12px;
@@ -326,7 +412,7 @@
     }
     .mini-title {
       font-weight: 800;
-      letter-spacing: -.02em;
+      letter-spacing: 0;
     }
     .muted { color: var(--muted); }
     .small { font-size: .88rem; }
@@ -346,7 +432,7 @@
       position: relative;
       width: 54px;
       height: 32px;
-      background: rgba(255,255,255,.12);
+      background: rgba(0,80,164,.12);
       border: 1px solid var(--line);
       border-radius: 999px;
       cursor: pointer;
@@ -374,18 +460,18 @@
     .badge {
       padding: 9px 11px;
       border-radius: 999px;
-      background: rgba(167,139,250,.14);
-      border: 1px solid rgba(167,139,250,.28);
-      color: #ede9fe;
+      background: rgba(255,209,102,.38);
+      border: 1px solid rgba(0,80,164,.16);
+      color: #684700;
       font-size: .85rem;
       font-weight: 700;
     }
     .callout {
-      background: rgba(96,165,250,.08);
-      border: 1px solid rgba(96,165,250,.22);
+      background: linear-gradient(135deg, rgba(0,80,164,.08), rgba(255,209,102,.32));
+      border: 1px solid rgba(0,80,164,.18);
       border-radius: 18px;
       padding: 12px 13px;
-      color: #dbeafe;
+      color: var(--text);
       line-height: 1.45;
       font-size: .95rem;
     }
@@ -400,10 +486,10 @@
       top: 18px;
       right: 18px;
       padding: 12px 14px;
-      background: rgba(34,197,94,.18);
-      border: 1px solid rgba(34,197,94,.24);
+      background: #fff;
+      border: 1px solid rgba(16,132,92,.24);
       border-radius: 16px;
-      color: #d8ffe4;
+      color: #07593d;
       font-weight: 800;
       box-shadow: var(--shadow);
       opacity: 0;
@@ -451,11 +537,25 @@
       .notes-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 740px) {
+      .header { align-items: flex-start; }
       .stats { grid-template-columns: repeat(2, 1fr); }
       .grid-2 { grid-template-columns: 1fr; }
       .prompt { margin-top: 14px; }
       .tabs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
       .tab { font-size: .82rem; padding: 10px 6px; }
+      .quiz-controls {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      select { width: 100%; }
+    }
+    @media (max-width: 560px) {
+      .header {
+        flex-direction: column;
+      }
+      .header #studyNowBtn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -463,7 +563,7 @@
   <div class="app">
     <div class="header">
       <div class="brand">
-        <div class="logo">Ñ</div>
+        <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Boricua Flashcards</h1>
           <div class="sub">High-frequency Spanish + Puerto Rican everyday vocabulary + your class notes</div>
@@ -547,6 +647,17 @@
 
     <section id="quizTab" class="tab-panel hidden">
       <div class="panel">
+        <div class="quiz-controls">
+          <label class="select-label" for="quizFilterSelect">Quiz section</label>
+          <select id="quizFilterSelect">
+            <option value="all">All</option>
+            <option value="verb">Verbs</option>
+            <option value="common">Common words</option>
+            <option value="puerto_rico">Puerto Rico</option>
+            <option value="class_notes">Class notes</option>
+            <option value="due">Due now</option>
+          </select>
+        </div>
         <div id="quizCard" class="card">
           <div>
             <div id="quizTag" class="tag">Quiz</div>
@@ -939,6 +1050,363 @@
       class_notes: "Class notes"
     };
 
+    const filterLabel = {
+      all: "All",
+      verb: "Verbs",
+      common: "Common words",
+      puerto_rico: "Puerto Rico",
+      class_notes: "Class notes",
+      due: "Due now"
+    };
+
+    const VERB_TENSE_EXAMPLES = {
+      ser: [
+        {label:"Present", es:"Soy estudiante de español.", en:"I am a Spanish student."},
+        {label:"Preterite", es:"Fui estudiante en esa escuela.", en:"I was a student at that school."},
+        {label:"Imperfect", es:"Era tímido de niño.", en:"I was shy as a child."},
+        {label:"Future", es:"Seré paciente mañana.", en:"I will be patient tomorrow."}
+      ],
+      estar: [
+        {label:"Present", es:"Estoy en casa ahora.", en:"I am at home now."},
+        {label:"Preterite", es:"Estuve en San Juan ayer.", en:"I was in San Juan yesterday."},
+        {label:"Imperfect", es:"Estaba cansado anoche.", en:"I was tired last night."},
+        {label:"Future", es:"Estaré listo mañana.", en:"I will be ready tomorrow."}
+      ],
+      tener: [
+        {label:"Present", es:"Tengo agua fría.", en:"I have cold water."},
+        {label:"Preterite", es:"Tuve clase ayer.", en:"I had class yesterday."},
+        {label:"Imperfect", es:"Tenía un carro viejo.", en:"I used to have an old car."},
+        {label:"Future", es:"Tendré tiempo mañana.", en:"I will have time tomorrow."}
+      ],
+      hacer: [
+        {label:"Present", es:"Hago café por la mañana.", en:"I make coffee in the morning."},
+        {label:"Preterite", es:"Hice la tarea ayer.", en:"I did the homework yesterday."},
+        {label:"Imperfect", es:"Hacía ejercicio antes.", en:"I used to exercise before."},
+        {label:"Future", es:"Haré la cena hoy.", en:"I will make dinner today."}
+      ],
+      ir: [
+        {label:"Present", es:"Voy a la plaza.", en:"I go to the plaza."},
+        {label:"Preterite", es:"Fui al mercado ayer.", en:"I went to the market yesterday."},
+        {label:"Imperfect", es:"Iba a la escuela en guagua.", en:"I used to go to school by bus."},
+        {label:"Future", es:"Iré a San Juan mañana.", en:"I will go to San Juan tomorrow."}
+      ],
+      poder: [
+        {label:"Present", es:"Puedo ayudarte hoy.", en:"I can help you today."},
+        {label:"Preterite", es:"Pude cocinar ayer.", en:"I was able to cook yesterday."},
+        {label:"Imperfect", es:"Podía leer un poco.", en:"I could read a little."},
+        {label:"Future", es:"Podré estudiar mañana.", en:"I will be able to study tomorrow."}
+      ],
+      querer: [
+        {label:"Present", es:"Quiero café con leche.", en:"I want coffee with milk."},
+        {label:"Preterite", es:"Quise llamar ayer.", en:"I wanted to call yesterday."},
+        {label:"Imperfect", es:"Quería agua fría.", en:"I wanted cold water."},
+        {label:"Future", es:"Querré descansar luego.", en:"I will want to rest later."}
+      ],
+      decir: [
+        {label:"Present", es:"Digo la verdad.", en:"I tell the truth."},
+        {label:"Preterite", es:"Dije gracias.", en:"I said thank you."},
+        {label:"Imperfect", es:"Decía hola siempre.", en:"I used to always say hello."},
+        {label:"Future", es:"Diré la respuesta.", en:"I will say the answer."}
+      ],
+      ver: [
+        {label:"Present", es:"Veo el mar desde aquí.", en:"I see the sea from here."},
+        {label:"Preterite", es:"Vi la plaza ayer.", en:"I saw the plaza yesterday."},
+        {label:"Imperfect", es:"Veía la casa amarilla.", en:"I used to see the yellow house."},
+        {label:"Future", es:"Veré a mi familia mañana.", en:"I will see my family tomorrow."}
+      ],
+      dar: [
+        {label:"Present", es:"Doy la dirección.", en:"I give the address."},
+        {label:"Preterite", es:"Di las gracias.", en:"I gave thanks."},
+        {label:"Imperfect", es:"Daba paseos por la tarde.", en:"I used to take walks in the afternoon."},
+        {label:"Future", es:"Daré una respuesta mañana.", en:"I will give an answer tomorrow."}
+      ],
+      hablar: [
+        {label:"Present", es:"Hablo español todos los días.", en:"I speak Spanish every day."},
+        {label:"Preterite", es:"Hablé con ella ayer.", en:"I spoke with her yesterday."},
+        {label:"Imperfect", es:"Hablaba mucho cuando era niño.", en:"I used to talk a lot when I was a child."},
+        {label:"Future", es:"Hablaré contigo mañana.", en:"I will speak with you tomorrow."}
+      ],
+      comer: [
+        {label:"Present", es:"Como arroz con habichuelas.", en:"I eat rice with beans."},
+        {label:"Preterite", es:"Comí mofongo ayer.", en:"I ate mofongo yesterday."},
+        {label:"Imperfect", es:"Comía pan por la mañana.", en:"I used to eat bread in the morning."},
+        {label:"Future", es:"Comeré temprano hoy.", en:"I will eat early today."}
+      ],
+      vivir: [
+        {label:"Present", es:"Vivo en San Juan.", en:"I live in San Juan."},
+        {label:"Preterite", es:"Viví en Ponce un año.", en:"I lived in Ponce for a year."},
+        {label:"Imperfect", es:"Vivía cerca de la playa.", en:"I used to live near the beach."},
+        {label:"Future", es:"Viviré en Puerto Rico.", en:"I will live in Puerto Rico."}
+      ],
+      venir: [
+        {label:"Present", es:"Vengo ahora mismo.", en:"I am coming right now."},
+        {label:"Preterite", es:"Vine a clase ayer.", en:"I came to class yesterday."},
+        {label:"Imperfect", es:"Venía a la plaza los domingos.", en:"I used to come to the plaza on Sundays."},
+        {label:"Future", es:"Vendré mañana temprano.", en:"I will come early tomorrow."}
+      ],
+      llevar: [
+        {label:"Present", es:"Llevo una mochila.", en:"I carry a backpack."},
+        {label:"Preterite", es:"Llevé agua a la playa.", en:"I took water to the beach."},
+        {label:"Imperfect", es:"Llevaba una camisa azul.", en:"I was wearing a blue shirt."},
+        {label:"Future", es:"Llevaré el libro mañana.", en:"I will take the book tomorrow."}
+      ],
+      pasar: [
+        {label:"Present", es:"Paso por la plaza.", en:"I pass by the plaza."},
+        {label:"Preterite", es:"Pasé por la tienda ayer.", en:"I stopped by the store yesterday."},
+        {label:"Imperfect", es:"Pasaba por aquí cada día.", en:"I used to pass by here every day."},
+        {label:"Future", es:"Pasaré mañana por tu casa.", en:"I will stop by your house tomorrow."}
+      ],
+      deber: [
+        {label:"Present", es:"Debo estudiar hoy.", en:"I should study today."},
+        {label:"Preterite", es:"Debí llamar ayer.", en:"I should have called yesterday."},
+        {label:"Imperfect", es:"Debía dinero antes.", en:"I owed money before."},
+        {label:"Future", es:"Deberé practicar más.", en:"I will need to practice more."}
+      ],
+      poner: [
+        {label:"Present", es:"Pongo la mesa.", en:"I set the table."},
+        {label:"Preterite", es:"Puse el libro allí.", en:"I put the book there."},
+        {label:"Imperfect", es:"Ponía música en casa.", en:"I used to play music at home."},
+        {label:"Future", es:"Pondré el agua en la nevera.", en:"I will put the water in the fridge."}
+      ],
+      parecer: [
+        {label:"Present", es:"Parece fácil.", en:"It seems easy."},
+        {label:"Preterite", es:"Pareció difícil ayer.", en:"It seemed difficult yesterday."},
+        {label:"Imperfect", es:"Parecía caro antes.", en:"It used to seem expensive."},
+        {label:"Future", es:"Parecerá mejor mañana.", en:"It will seem better tomorrow."}
+      ],
+      quedar: [
+        {label:"Present", es:"Quedo con Ana hoy.", en:"I meet Ana today."},
+        {label:"Preterite", es:"Quedé en casa ayer.", en:"I stayed home yesterday."},
+        {label:"Imperfect", es:"Quedaba cerca de la escuela.", en:"It used to be near the school."},
+        {label:"Future", es:"Quedaré contigo mañana.", en:"I will meet you tomorrow."}
+      ],
+      creer: [
+        {label:"Present", es:"Creo que sí.", en:"I think so."},
+        {label:"Preterite", es:"Creí la historia.", en:"I believed the story."},
+        {label:"Imperfect", es:"Creía que era fácil.", en:"I thought it was easy."},
+        {label:"Future", es:"Creeré en mí.", en:"I will believe in myself."}
+      ],
+      encontrar: [
+        {label:"Present", es:"Encuentro las llaves.", en:"I find the keys."},
+        {label:"Preterite", es:"Encontré el mapa.", en:"I found the map."},
+        {label:"Imperfect", es:"Encontraba flores en la calle.", en:"I used to find flowers in the street."},
+        {label:"Future", es:"Encontraré la respuesta.", en:"I will find the answer."}
+      ],
+      llamar: [
+        {label:"Present", es:"Llamo a mi mamá.", en:"I call my mom."},
+        {label:"Preterite", es:"Llamé a Luis ayer.", en:"I called Luis yesterday."},
+        {label:"Imperfect", es:"Llamaba cada noche.", en:"I used to call every night."},
+        {label:"Future", es:"Llamaré mañana.", en:"I will call tomorrow."}
+      ],
+      necesitar: [
+        {label:"Present", es:"Necesito ayuda.", en:"I need help."},
+        {label:"Preterite", es:"Necesité dinero ayer.", en:"I needed money yesterday."},
+        {label:"Imperfect", es:"Necesitaba agua.", en:"I needed water."},
+        {label:"Future", es:"Necesitaré más tiempo.", en:"I will need more time."}
+      ],
+      sentir: [
+        {label:"Present", es:"Siento frío.", en:"I feel cold."},
+        {label:"Preterite", es:"Sentí alegría ayer.", en:"I felt joy yesterday."},
+        {label:"Imperfect", es:"Sentía sueño en clase.", en:"I felt sleepy in class."},
+        {label:"Future", es:"Sentiré calma mañana.", en:"I will feel calm tomorrow."}
+      ],
+      dejar: [
+        {label:"Present", es:"Dejo el libro aquí.", en:"I leave the book here."},
+        {label:"Preterite", es:"Dejé las llaves en casa.", en:"I left the keys at home."},
+        {label:"Imperfect", es:"Dejaba todo listo.", en:"I used to leave everything ready."},
+        {label:"Future", es:"Dejaré una nota.", en:"I will leave a note."}
+      ],
+      salir: [
+        {label:"Present", es:"Salgo temprano.", en:"I leave early."},
+        {label:"Preterite", es:"Salí anoche.", en:"I went out last night."},
+        {label:"Imperfect", es:"Salía a caminar.", en:"I used to go out walking."},
+        {label:"Future", es:"Saldré después.", en:"I will leave later."}
+      ],
+      llegar: [
+        {label:"Present", es:"Llego a las ocho.", en:"I arrive at eight."},
+        {label:"Preterite", es:"Llegué tarde ayer.", en:"I arrived late yesterday."},
+        {label:"Imperfect", es:"Llegaba temprano antes.", en:"I used to arrive early before."},
+        {label:"Future", es:"Llegaré mañana.", en:"I will arrive tomorrow."}
+      ],
+      saber: [
+        {label:"Present", es:"Sé la respuesta.", en:"I know the answer."},
+        {label:"Preterite", es:"Supe la noticia ayer.", en:"I found out the news yesterday."},
+        {label:"Imperfect", es:"Sabía tu nombre.", en:"I knew your name."},
+        {label:"Future", es:"Sabré más mañana.", en:"I will know more tomorrow."}
+      ],
+      conocer: [
+        {label:"Present", es:"Conozco a Ana.", en:"I know Ana."},
+        {label:"Preterite", es:"Conocí a Luis ayer.", en:"I met Luis yesterday."},
+        {label:"Imperfect", es:"Conocía ese barrio.", en:"I used to know that neighborhood."},
+        {label:"Future", es:"Conoceré la ciudad.", en:"I will get to know the city."}
+      ],
+      trabajar: [
+        {label:"Present", es:"Trabajo hoy.", en:"I work today."},
+        {label:"Preterite", es:"Trabajé ayer.", en:"I worked yesterday."},
+        {label:"Imperfect", es:"Trabajaba en Ponce.", en:"I used to work in Ponce."},
+        {label:"Future", es:"Trabajaré mañana.", en:"I will work tomorrow."}
+      ],
+      pensar: [
+        {label:"Present", es:"Pienso en mi familia.", en:"I think about my family."},
+        {label:"Preterite", es:"Pensé en eso ayer.", en:"I thought about that yesterday."},
+        {label:"Imperfect", es:"Pensaba mucho antes.", en:"I used to think a lot before."},
+        {label:"Future", es:"Pensaré en el plan.", en:"I will think about the plan."}
+      ],
+      preguntar: [
+        {label:"Present", es:"Pregunto en clase.", en:"I ask in class."},
+        {label:"Preterite", es:"Pregunté por el baño.", en:"I asked for the bathroom."},
+        {label:"Imperfect", es:"Preguntaba mucho.", en:"I used to ask a lot."},
+        {label:"Future", es:"Preguntaré mañana.", en:"I will ask tomorrow."}
+      ],
+      entender: [
+        {label:"Present", es:"Entiendo la frase.", en:"I understand the sentence."},
+        {label:"Preterite", es:"Entendí la pregunta.", en:"I understood the question."},
+        {label:"Imperfect", es:"Entendía un poco.", en:"I understood a little."},
+        {label:"Future", es:"Entenderé más pronto.", en:"I will understand more soon."}
+      ],
+      bregar: [
+        {label:"Present", es:"Brego con eso ahora.", en:"I deal with that now."},
+        {label:"Preterite", es:"Bregué con la tarea ayer.", en:"I handled the homework yesterday."},
+        {label:"Imperfect", es:"Bregaba con el carro.", en:"I used to deal with the car."},
+        {label:"Future", es:"Bregaré con eso mañana.", en:"I will handle that tomorrow."}
+      ],
+      parquear: [
+        {label:"Present", es:"Parqueo aquí.", en:"I park here."},
+        {label:"Preterite", es:"Parqueé cerca de la plaza.", en:"I parked near the plaza."},
+        {label:"Imperfect", es:"Parqueaba en la calle.", en:"I used to park in the street."},
+        {label:"Future", es:"Parquearé allá mañana.", en:"I will park over there tomorrow."}
+      ],
+      janguear: [
+        {label:"Present", es:"Jangueo con mi pana.", en:"I hang out with my buddy."},
+        {label:"Preterite", es:"Jangueé ayer en Santurce.", en:"I hung out yesterday in Santurce."},
+        {label:"Imperfect", es:"Jangueaba los viernes.", en:"I used to hang out on Fridays."},
+        {label:"Future", es:"Janguearé después de clase.", en:"I will hang out after class."}
+      ],
+      hospedarte: [
+        {label:"Present", es:"Me hospedo aquí.", en:"I stay here."},
+        {label:"Preterite", es:"Me hospedé en San Juan.", en:"I stayed in San Juan."},
+        {label:"Imperfect", es:"Me hospedaba cerca del mar.", en:"I used to stay near the sea."},
+        {label:"Future", es:"Me hospedaré aquí mañana.", en:"I will stay here tomorrow."}
+      ],
+      traer: [
+        {label:"Present", es:"Traigo agua.", en:"I bring water."},
+        {label:"Preterite", es:"Traje café ayer.", en:"I brought coffee yesterday."},
+        {label:"Imperfect", es:"Traía libros a clase.", en:"I used to bring books to class."},
+        {label:"Future", es:"Traeré comida mañana.", en:"I will bring food tomorrow."}
+      ],
+      conducir: [
+        {label:"Present", es:"Conduzco despacio.", en:"I drive slowly."},
+        {label:"Preterite", es:"Conduje a clase ayer.", en:"I drove to class yesterday."},
+        {label:"Imperfect", es:"Conducía de noche.", en:"I used to drive at night."},
+        {label:"Future", es:"Conduciré mañana.", en:"I will drive tomorrow."}
+      ],
+      agrada: [
+        {label:"Present", es:"Me agrada la clase.", en:"I like the class."},
+        {label:"Preterite", es:"Me agradó la música.", en:"I liked the music."},
+        {label:"Imperfect", es:"Me agradaba caminar allí.", en:"I used to like walking there."},
+        {label:"Future", es:"Me agradará este plan.", en:"I will like this plan."}
+      ],
+      acostarse: [
+        {label:"Present", es:"Me acuesto temprano.", en:"I go to bed early."},
+        {label:"Preterite", es:"Me acosté tarde ayer.", en:"I went to bed late yesterday."},
+        {label:"Imperfect", es:"Me acostaba a las diez.", en:"I used to go to bed at ten."},
+        {label:"Future", es:"Me acostaré temprano hoy.", en:"I will go to bed early today."}
+      ]
+    };
+
+    const EXTRA_USAGE_EXAMPLES = {
+      36:[{es:"Hola, buenos días.", en:"Hello, good morning."},{es:"Digo hola al llegar.", en:"I say hello when I arrive."}],
+      37:[{es:"Adiós, hasta mañana.", en:"Goodbye, see you tomorrow."},{es:"Le digo adiós a mi familia.", en:"I say goodbye to my family."}],
+      38:[{es:"Habla más lento, por favor.", en:"Speak more slowly, please."},{es:"Un café, por favor.", en:"A coffee, please."}],
+      39:[{es:"Gracias por la ayuda.", en:"Thank you for the help."},{es:"Digo gracias siempre.", en:"I always say thank you."}],
+      40:[{es:"De nada, con gusto.", en:"You’re welcome, gladly."},{es:"Ella dice de nada.", en:"She says you’re welcome."}],
+      41:[{es:"Sí, estoy listo.", en:"Yes, I am ready."},{es:"Sí, voy contigo.", en:"Yes, I am going with you."}],
+      42:[{es:"No, gracias.", en:"No, thank you."},{es:"No tengo clase hoy.", en:"I don’t have class today."}],
+      43:[{es:"Hoy hace sol.", en:"Today it is sunny."},{es:"Hoy voy a practicar.", en:"Today I am going to practice."}],
+      44:[{es:"Mañana tengo clase.", en:"Tomorrow I have class."},{es:"La mañana está bonita.", en:"The morning is pretty."}],
+      45:[{es:"Ahora estoy ocupado.", en:"Now I am busy."},{es:"Vamos ahora mismo.", en:"Let’s go right now."}],
+      46:[{es:"Después como algo.", en:"Later I eat something."},{es:"Después de clase estudio.", en:"After class I study."}],
+      47:[{es:"Ven aquí, por favor.", en:"Come here, please."},{es:"Aquí está mi casa.", en:"Here is my house."}],
+      48:[{es:"La plaza está allí.", en:"The plaza is there."},{es:"Nos vemos allí.", en:"We’ll see each other there."}],
+      49:[{es:"¿Dónde vive tu familia?", en:"Where does your family live?"},{es:"¿Dónde queda la tienda?", en:"Where is the store?"}],
+      50:[{es:"¿Cuándo tienes clase?", en:"When do you have class?"},{es:"¿Cuándo vamos a la playa?", en:"When are we going to the beach?"}],
+      51:[{es:"¿Qué comes hoy?", en:"What are you eating today?"},{es:"¿Qué significa eso?", en:"What does that mean?"}],
+      52:[{es:"¿Quién viene mañana?", en:"Who is coming tomorrow?"},{es:"¿Quién habla español?", en:"Who speaks Spanish?"}],
+      53:[{es:"¿Cómo se dice en español?", en:"How do you say it in Spanish?"},{es:"¿Cómo llego a la plaza?", en:"How do I get to the plaza?"}],
+      54:[{es:"¿Por qué estudias español?", en:"Why do you study Spanish?"},{es:"¿Por qué estás feliz?", en:"Why are you happy?"}],
+      55:[{es:"Estudio porque quiero aprender.", en:"I study because I want to learn."},{es:"Voy porque tengo tiempo.", en:"I go because I have time."}],
+      56:[{es:"Yo soy de aquí.", en:"I am from here."},{es:"Yo estudio por la noche.", en:"I study at night."}],
+      57:[{es:"Tú hablas bien.", en:"You speak well."},{es:"Tú tienes mi número.", en:"You have my number."}],
+      58:[{es:"Usted habla muy claro.", en:"You speak very clearly."},{es:"¿Usted quiere café?", en:"Do you want coffee?"}],
+      59:[{es:"Ustedes llegan temprano.", en:"You all arrive early."},{es:"Ustedes pueden practicar aquí.", en:"You all can practice here."}],
+      60:[{es:"Nosotros estudiamos juntos.", en:"We study together."},{es:"Nosotros vivimos cerca.", en:"We live nearby."}],
+      61:[{es:"Ellos comen arroz.", en:"They eat rice."},{es:"Ellos llegan mañana.", en:"They arrive tomorrow."}],
+      62:[{es:"Mi teléfono está aquí.", en:"My phone is here."},{es:"Mi familia vive en Puerto Rico.", en:"My family lives in Puerto Rico."}],
+      63:[{es:"Tu casa es bonita.", en:"Your house is pretty."},{es:"Tu amigo está aquí.", en:"Your friend is here."}],
+      64:[{es:"Su carro es rojo.", en:"His/her/your/their car is red."},{es:"Su nombre es Ana.", en:"His/her/your/their name is Ana."}],
+      65:[{es:"Mi casa está cerca.", en:"My house is nearby."},{es:"Voy a casa después.", en:"I am going home later."}],
+      66:[{es:"Mi carro es azul.", en:"My car is blue."},{es:"El carro está en la calle.", en:"The car is on the street."}],
+      67:[{es:"Voy al trabajo temprano.", en:"I go to work early."},{es:"Mi trabajo queda cerca.", en:"My job is nearby."}],
+      68:[{es:"Voy a la escuela en guagua.", en:"I go to school by bus."},{es:"La escuela empieza hoy.", en:"School starts today."}],
+      69:[{es:"El agua está fría.", en:"The water is cold."},{es:"Tomo agua todos los días.", en:"I drink water every day."}],
+      70:[{es:"La comida huele bien.", en:"The food smells good."},{es:"Traigo comida para todos.", en:"I bring food for everyone."}],
+      71:[{es:"Necesito dinero para la guagua.", en:"I need money for the bus."},{es:"El dinero está en mi cartera.", en:"The money is in my wallet."}],
+      72:[{es:"Tengo tiempo ahora.", en:"I have time now."},{es:"El tiempo está bueno hoy.", en:"The weather is good today."}],
+      73:[{es:"Mi amigo habla español.", en:"My friend speaks Spanish."},{es:"Voy con un amigo.", en:"I am going with a friend."}],
+      74:[{es:"Mi familia come junta.", en:"My family eats together."},{es:"Llamo a mi familia hoy.", en:"I call my family today."}],
+      75:[{es:"Hoy es un buen día.", en:"Today is a good day."},{es:"El día está lindo.", en:"The day is beautiful."}],
+      76:[{es:"La noche está tranquila.", en:"The night is calm."},{es:"Trabajo de noche.", en:"I work at night."}],
+      77:[{es:"Necesito ir al baño.", en:"I need to go to the bathroom."},{es:"El baño está al fondo.", en:"The bathroom is in the back."}],
+      78:[{es:"Camino por la calle.", en:"I walk down the street."},{es:"La calle es estrecha.", en:"The street is narrow."}],
+      79:[{es:"La tienda abre temprano.", en:"The store opens early."},{es:"Compro agua en la tienda.", en:"I buy water at the store."}],
+      80:[{es:"La casa es grande.", en:"The house is big."},{es:"Quiero un vaso grande.", en:"I want a big glass."}],
+      81:[{es:"El cuarto es pequeño.", en:"The room is small."},{es:"Tengo una mochila pequeña.", en:"I have a small backpack."}],
+      82:[{es:"El café está bueno.", en:"The coffee is good."},{es:"Es un buen plan.", en:"It is a good plan."}],
+      83:[{es:"El tiempo está malo.", en:"The weather is bad."},{es:"No es mala idea.", en:"It is not a bad idea."}],
+      84:[{es:"Tengo un libro nuevo.", en:"I have a new book."},{es:"La clase es nueva para mí.", en:"The class is new for me."}],
+      85:[{es:"Camino por el Viejo San Juan.", en:"I walk through Old San Juan."},{es:"Mi carro viejo todavía funciona.", en:"My old car still works."}],
+      86:[{es:"La guagua va rápido.", en:"The bus goes fast."},{es:"Contesto rápido.", en:"I answer fast."}],
+      87:[{es:"Camino lento por la plaza.", en:"I walk slowly through the plaza."},{es:"Habla lento, por favor.", en:"Speak slowly, please."}],
+      88:[{es:"Siempre tomo café.", en:"I always drink coffee."},{es:"Siempre digo gracias.", en:"I always say thank you."}],
+      89:[{es:"Nunca llego tarde.", en:"I never arrive late."},{es:"Nunca como solo.", en:"I never eat alone."}],
+      90:[{es:"Yo también quiero agua.", en:"I also want water."},{es:"Ella también estudia.", en:"She also studies."}],
+      91:[{es:"Es pequeño, pero bonito.", en:"It is small, but pretty."},{es:"Quiero ir, pero trabajo.", en:"I want to go, but I work."}],
+      92:[{es:"Espero la guagua en la parada.", en:"I wait for the bus at the stop."},{es:"La guagua va para San Juan.", en:"The bus goes to San Juan."}],
+      93:[{es:"La china está dulce.", en:"The orange is sweet."},{es:"Compro chinas en el mercado.", en:"I buy oranges at the market."}],
+      94:[{es:"El zafacón está lleno.", en:"The trash can is full."},{es:"Saca el zafacón afuera.", en:"Take the trash can outside."}],
+      95:[{es:"El guineo está maduro.", en:"The banana is ripe."},{es:"Como un guineo por la mañana.", en:"I eat a banana in the morning."}],
+      96:[{es:"Las habichuelas están ricas.", en:"The beans are tasty."},{es:"Mi abuela cocina habichuelas.", en:"My grandmother cooks beans."}],
+      97:[{es:"Pon el jugo en la nevera.", en:"Put the juice in the fridge."},{es:"La nevera está abierta.", en:"The fridge is open."}],
+      98:[{es:"Mis mahones son azules.", en:"My jeans are blue."},{es:"Lavo los mahones hoy.", en:"I wash the jeans today."}],
+      99:[{es:"Tengo pocos chavos.", en:"I have a little money."},{es:"Guardo los chavos para mañana.", en:"I save the money for tomorrow."}],
+      102:[{es:"Voy con mi pana a la playa.", en:"I am going with my buddy to the beach."},{es:"Mi pana me llama hoy.", en:"My buddy calls me today."}],
+      103:[{es:"Mi corillo estudia conmigo.", en:"My crew studies with me."},{es:"El corillo llega tarde.", en:"The crew arrives late."}],
+      104:[{es:"Tu idea está nítida.", en:"Your idea is cool."},{es:"El mural está nítido.", en:"The mural is neat."}],
+      105:[{es:"La música está brutal.", en:"The music is awesome."},{es:"El paseo fue brutal.", en:"The trip was amazing."}],
+      107:[{es:"Mi familia es boricua.", en:"My family is Puerto Rican."},{es:"La comida boricua me encanta.", en:"I love Puerto Rican food."}],
+      108:[{es:"El mapo está en la cocina.", en:"The mop is in the kitchen."},{es:"Uso el mapo después.", en:"I use the mop later."}],
+      109:[{es:"El jugo de china está frío.", en:"The orange juice is cold."},{es:"Quiero jugo de china con desayuno.", en:"I want orange juice with breakfast."}],
+      110:[{es:"Ayer estudié en casa.", en:"Yesterday I studied at home."},{es:"Ayer llovió mucho.", en:"Yesterday it rained a lot."}],
+      111:[{es:"El premio es pequeño.", en:"The prize is small."},{es:"Quiero ganar un premio.", en:"I want to win a prize."}],
+      112:[{es:"La medalla de oro brilla.", en:"The gold medal shines."},{es:"Quiero ver la medalla de oro.", en:"I want to see the gold medal."}],
+      113:[{es:"La medalla de plata es bonita.", en:"The silver medal is pretty."},{es:"Ganamos la medalla de plata.", en:"We won the silver medal."}],
+      114:[{es:"Nos vemos pasado mañana.", en:"We’ll see each other the day after tomorrow."},{es:"Pasado mañana tengo examen.", en:"The day after tomorrow I have a test."}],
+      115:[{es:"Espero en el semáforo.", en:"I wait at the traffic light."},{es:"El semáforo cambió a verde.", en:"The traffic light changed to green."}],
+      116:[{es:"Tengo vergüenza en clase.", en:"I feel embarrassed in class."},{es:"No tengas vergüenza.", en:"Don’t be embarrassed."}],
+      117:[{es:"Abro una lata de agua con gas.", en:"I open a can of sparkling water."},{es:"La lata está fría.", en:"The can is cold."}],
+      118:[{es:"Miro la pantalla.", en:"I look at the screen."},{es:"La pantalla es grande.", en:"The screen is big."}],
+      119:[{es:"Compro un libro en la librería.", en:"I buy a book at the bookstore."},{es:"La librería abre a las nueve.", en:"The bookstore opens at nine."}],
+      120:[{es:"La biblioteca está tranquila.", en:"The library is quiet."},{es:"Leo en la biblioteca.", en:"I read in the library."}],
+      121:[{es:"Voy a la lavandería hoy.", en:"I go to the laundromat today."},{es:"La lavandería queda cerca.", en:"The laundromat is nearby."}],
+      122:[{es:"Veo cuadros y arte en la galería.", en:"I see paintings and art in the gallery."},{es:"Me gustan los cuadros y arte de San Juan.", en:"I like the paintings and art of San Juan."}],
+      123:[{es:"El ejercicio me ayuda.", en:"Exercise helps me."},{es:"Hago ejercicio en la mañana.", en:"I exercise in the morning."}],
+      124:[{es:"La gasolinera está abierta.", en:"The gas station is open."},{es:"Paro en la gasolinera.", en:"I stop at the gas station."}],
+      125:[{es:"El albergue de animales necesita ayuda.", en:"The animal shelter needs help."},{es:"Voy al albergue de animales el sábado.", en:"I go to the animal shelter on Saturday."}],
+      126:[{es:"El acuario abre temprano.", en:"The aquarium opens early."},{es:"El acuario está cerca del mar.", en:"The aquarium is near the sea."}],
+      136:[{es:"Mi abuela dice: El que invita paga.", en:"My grandmother says: whoever invites pays."},{es:"Si yo invito, yo pago.", en:"If I invite, I pay."}],
+      137:[{es:"Después de comer, digo: Barriga llena, corazón contento.", en:"After eating, I say: full belly, happy heart."},{es:"La comida está buena y todos están contentos.", en:"The food is good and everyone is happy."}]
+    };
+
     const defaultState = () => {
       const progress = {};
       for (const c of DECK) {
@@ -972,9 +1440,11 @@
     let currentFilter = "all";
     let currentStudyCard = null;
     let studyRevealed = false;
+    let currentQuizFilter = "all";
     let currentQuizCard = null;
     let quizOptions = [];
     let quizAnswered = false;
+    let quizMessage = "";
 
     function loadState() {
       try {
@@ -1043,9 +1513,9 @@
       return (state.progress[card.id]?.dueAt || 0) <= Date.now();
     }
 
-    function getFilteredDeck(filter = currentFilter) {
+    function getFilteredDeck(filter = currentFilter, {respectDueSetting = true} = {}) {
       let deck = getDeck();
-      if (state.settings.dueOnly && filter === "all") filter = "due";
+      if (respectDueSetting && state.settings.dueOnly && filter === "all") filter = "due";
       if (filter === "due") return deck.filter(dueNow);
       if (filter === "all") return deck;
       return deck.filter(c => c.category === filter);
@@ -1090,9 +1560,33 @@
     }
 
     function displayExample(card) {
-      return state.settings.direction === "en-es"
-        ? `${card.exampleEs}<br><span class="muted">${card.exampleEn}</span>`
-        : `${card.exampleEn}<br><span class="muted">${card.exampleEs}</span>`;
+      return formatExamples(getUsageExamples(card));
+    }
+
+    function getUsageExamples(card) {
+      if (VERB_TENSE_EXAMPLES[card.es]) return VERB_TENSE_EXAMPLES[card.es];
+      const examples = [
+        {label:"Example 1", es:card.exampleEs, en:card.exampleEn},
+        ...(EXTRA_USAGE_EXAMPLES[card.id] || []).map((item, index) => ({
+          label: `Example ${index + 2}`,
+          ...item
+        }))
+      ];
+      return examples.slice(0, 3);
+    }
+
+    function formatExamples(examples) {
+      return `<div class="example-list">${examples.map(example => {
+        const primary = state.settings.direction === "en-es" ? example.es : example.en;
+        const secondary = state.settings.direction === "en-es" ? example.en : example.es;
+        return `
+          <div class="example-row">
+            <div class="example-label">${example.label}</div>
+            <div class="example-es">${primary}</div>
+            <div class="example-en">${secondary}</div>
+          </div>
+        `;
+      }).join("")}</div>`;
     }
 
     function renderStudyCard() {
@@ -1159,13 +1653,22 @@
     }
 
     function buildQuizCard() {
-      const deck = getDeck();
-      const dueDeck = deck.filter(dueNow);
-      const pool = dueDeck.length >= 4 ? dueDeck : deck;
-      currentQuizCard = shuffle(pool).sort((a, b) => state.progress[a.id].box - state.progress[b.id].box)[0];
-      const others = shuffle(deck.filter(c => c.id !== currentQuizCard.id)).slice(0, 3);
+      const deck = getFilteredDeck(currentQuizFilter, {respectDueSetting: false});
+      if (deck.length < 2) {
+        currentQuizCard = null;
+        quizOptions = [];
+        quizAnswered = false;
+        quizMessage = deck.length
+          ? `Need at least two cards in ${filterLabel[currentQuizFilter]} for a quiz.`
+          : `No cards available in ${filterLabel[currentQuizFilter]}.`;
+        renderQuiz();
+        return;
+      }
+      currentQuizCard = shuffle(deck).sort((a, b) => state.progress[a.id].box - state.progress[b.id].box)[0];
+      const others = shuffle(deck.filter(c => c.id !== currentQuizCard.id)).slice(0, Math.min(3, deck.length - 1));
       quizOptions = shuffle([currentQuizCard, ...others]);
       quizAnswered = false;
+      quizMessage = "";
       renderQuiz();
     }
 
@@ -1178,8 +1681,8 @@
       const nextBtn = document.getElementById("nextQuizBtn");
       const startBtn = document.getElementById("startQuizBtn");
       if (!currentQuizCard) {
-        promptEl.textContent = "Tap Start Quiz";
-        tagEl.textContent = "Quiz";
+        promptEl.textContent = quizMessage || "Tap Start Quiz";
+        tagEl.textContent = `${filterLabel[currentQuizFilter]} quiz`;
         choicesEl.classList.add("hidden");
         feedbackEl.classList.add("hidden");
         exEl.classList.add("hidden");
@@ -1188,7 +1691,7 @@
         return;
       }
       promptEl.textContent = displayPrompt(currentQuizCard);
-      tagEl.textContent = categoryLabel[currentQuizCard.category] + " quiz";
+      tagEl.textContent = `${filterLabel[currentQuizFilter]} quiz`;
       choicesEl.innerHTML = "";
       choicesEl.classList.remove("hidden");
       feedbackEl.classList.add("hidden");
@@ -1198,6 +1701,7 @@
       for (const option of quizOptions) {
         const btn = document.createElement("button");
         btn.className = "quiz-choice";
+        btn.dataset.cardId = String(option.id);
         btn.textContent = displayAnswer(option);
         btn.addEventListener("click", () => answerQuiz(option.id, btn));
         choicesEl.appendChild(btn);
@@ -1212,7 +1716,7 @@
       const feedbackEl = document.getElementById("quizFeedback");
       const exEl = document.getElementById("quizExample");
       for (const btn of choices) {
-        const isCorrect = btn.textContent === displayAnswer(currentQuizCard);
+        const isCorrect = Number(btn.dataset.cardId) === correctId;
         if (isCorrect) btn.classList.add("correct");
       }
       const success = optionId === correctId;
@@ -1357,6 +1861,14 @@
     document.getElementById("shuffleBtn").addEventListener("click", pickStudyCard);
     document.getElementById("startQuizBtn").addEventListener("click", buildQuizCard);
     document.getElementById("nextQuizBtn").addEventListener("click", buildQuizCard);
+    document.getElementById("quizFilterSelect").addEventListener("change", (e) => {
+      currentQuizFilter = e.target.value;
+      currentQuizCard = null;
+      quizOptions = [];
+      quizAnswered = false;
+      quizMessage = "";
+      renderQuiz();
+    });
 
     document.getElementById("directionBtn").addEventListener("click", () => {
       state.settings.direction = state.settings.direction === "en-es" ? "es-en" : "en-es";
@@ -1370,9 +1882,15 @@
       state.settings.includePR = !state.settings.includePR;
       saveState();
       currentQuizCard = null;
+      quizMessage = "";
       if (currentFilter === "puerto_rico" && !state.settings.includePR) {
         currentFilter = "all";
         document.querySelectorAll(".chip").forEach(c => c.classList.toggle("active", c.dataset.filter === "all"));
+      }
+      if (currentQuizFilter === "puerto_rico" && !state.settings.includePR) {
+        currentQuizFilter = "all";
+        document.getElementById("quizFilterSelect").value = "all";
+        renderQuiz();
       }
       pickStudyCard();
       updateUI();
