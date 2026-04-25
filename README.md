@@ -7,6 +7,7 @@ A mobile-friendly and desktop-friendly Spanish flash card app tuned for Puerto R
 - High-frequency Spanish verbs
 - High-frequency everyday vocabulary
 - Puerto Rico vocabulary pack and usage notes
+- Class-note vocabulary, grammar references, and self-check activities
 - Study mode and quiz mode
 - XP, streak, accuracy, and mastered-card tracking
 - Local progress save in the browser
