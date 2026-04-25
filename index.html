@@ -70,36 +70,41 @@
       min-width: 0;
     }
     .logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
+      width: 58px;
+      height: 40px;
+      border-radius: 10px;
       background:
-        linear-gradient(90deg, transparent 0 40%, rgba(255,255,255,.96) 40% 100%),
-        repeating-linear-gradient(180deg, var(--accent-2) 0 10px, #fff 10px 20px);
+        linear-gradient(180deg,
+          var(--accent-2) 0 20%,
+          #fff 20% 40%,
+          var(--accent-2) 40% 60%,
+          #fff 60% 80%,
+          var(--accent-2) 80% 100%);
       border: 2px solid #fff;
-      display: grid;
-      place-items: center;
-      font-size: 28px;
       box-shadow: var(--shadow);
       flex: 0 0 auto;
-      color: #fff;
-      font-weight: 900;
       overflow: hidden;
       position: relative;
-      text-shadow: 0 2px 8px rgba(0,0,0,.28);
     }
     .logo::before {
       content: "";
       position: absolute;
       inset: 0 auto 0 0;
-      width: 62%;
-      background: linear-gradient(135deg, var(--accent), #0074d9);
+      width: 60%;
+      background: #0050a4;
       clip-path: polygon(0 0, 100% 50%, 0 100%);
     }
     .logo::after {
-      content: "Ñ";
-      position: relative;
-      z-index: 1;
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      z-index: 2;
+      width: 15px;
+      height: 15px;
+      background: #fff;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 79% 91%, 50% 70%, 21% 91%, 32% 56%, 2% 35%, 39% 35%);
+      transform: translateY(-50%);
     }
     h1 {
       margin: 0;
@@ -533,6 +538,39 @@
       margin: 0;
       padding-left: 18px;
     }
+    .notes-grid .wide {
+      grid-column: 1 / -1;
+    }
+    .activity-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .activity-item {
+      background: rgba(255,255,255,.66);
+      border: 1px solid rgba(0,80,164,.13);
+      border-radius: 14px;
+      padding: 10px 11px;
+    }
+    .activity-prompt {
+      font-weight: 750;
+      line-height: 1.45;
+    }
+    details.answer-key {
+      background: rgba(255,209,102,.18);
+      border: 1px solid rgba(0,80,164,.14);
+      border-radius: 14px;
+      margin-top: 12px;
+      padding: 10px 12px;
+    }
+    details.answer-key summary {
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 800;
+    }
+    details.answer-key .note-list {
+      margin-top: 10px;
+    }
     @media (max-width: 820px) {
       .notes-grid { grid-template-columns: 1fr; }
     }
@@ -640,7 +678,7 @@
 
       <div class="panel">
         <div class="callout">
-          I folded in the clearly legible items from your class notes and organized them as a separate class-notes pack. The new Notes tab also keeps your verb-ending charts and a short list of irregulars handy while you study.
+          I folded in the clearly legible items from your class notes and organized them as a separate class-notes pack. The Notes tab now includes preterite focus tables and self-check activities from your worksheets.
         </div>
       </div>
     </section>
@@ -817,13 +855,56 @@
         </div>
 
         <div class="panel">
-          <div class="mini-title">Examples from class</div>
+          <div class="mini-title">Useful phrases from class</div>
           <ul class="note-list small">
-            <li>hablar: hablé, hablaste, habló, hablamos, hablaron</li>
-            <li>ver: vi, viste, vio, vimos, vieron</li>
-            <li>ayer pude cocinar.</li>
-            <li>El que invita paga.</li>
-            <li>Barriga llena, corazón contento.</li>
+            <li>¿Cómo fue tu día? - How was your day?</li>
+            <li>¿A dónde fueron? - Where did they / you all go?</li>
+            <li>¿Cuál es la ruta para viajar de ___ a Puerto Rico? - What is the route to travel from ___ to Puerto Rico?</li>
+            <li>sin avisar - without warning / by surprise</li>
+            <li>mucho tiempo - a long time</li>
+            <li>muchas veces - many times</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="mini-title">Preterite: ser and ir</div>
+          <div class="table-wrap">
+            <table class="grammar">
+              <thead>
+                <tr><th>Subject</th><th>ser / ir</th><th>Quick use</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>yo</td><td>fui</td><td>Yo fui a clase.</td></tr>
+                <tr><td>tú</td><td>fuiste</td><td>Tú fuiste amable.</td></tr>
+                <tr><td>él/ella/usted</td><td>fue</td><td>Ella fue al cine.</td></tr>
+                <tr><td>nosotros/nosotras</td><td>fuimos</td><td>Fuimos a San Juan.</td></tr>
+                <tr><td>ellos/ellas/ustedes</td><td>fueron</td><td>Fueron los culpables.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="mini-title">Preterite: hacer and decir</div>
+          <div class="table-wrap">
+            <table class="grammar">
+              <thead>
+                <tr><th>Subject</th><th>hacer</th><th>decir</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>yo</td><td>hice</td><td>dije</td></tr>
+                <tr><td>tú</td><td>hiciste</td><td>dijiste</td></tr>
+                <tr><td>él/ella/usted</td><td>hizo</td><td>dijo</td></tr>
+                <tr><td>nosotros/nosotras</td><td>hicimos</td><td>dijimos</td></tr>
+                <tr><td>ellos/ellas/ustedes</td><td>hicieron</td><td>dijeron</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="note-list small" style="margin-top:12px;">
+            <li>Hice la ensalada ayer.</li>
+            <li>Ellos hicieron demasiado ruido.</li>
+            <li>Ella dijo la noticia.</li>
+            <li>Nosotros dijimos la respuesta.</li>
           </ul>
         </div>
 
@@ -842,6 +923,69 @@
             <li>traer</li>
             <li>conducir</li>
           </ul>
+        </div>
+
+        <div class="panel wide">
+          <div class="mini-title">Activity: ser or ir?</div>
+          <div class="activity-list small">
+            <div class="activity-item"><div class="activity-prompt">1. Yo no ___ a la escuela ayer. (ir)</div></div>
+            <div class="activity-item"><div class="activity-prompt">2. Ellos ___ los culpables de la pelea. (ser)</div></div>
+            <div class="activity-item"><div class="activity-prompt">3. ¿Ustedes ___ a ver la producción? (ir)</div></div>
+            <div class="activity-item"><div class="activity-prompt">4. En la ópera, nosotros ___ toreros. (ser)</div></div>
+            <div class="activity-item"><div class="activity-prompt">5. Ayer yo ___ a ayudarte. (ir)</div></div>
+          </div>
+          <details class="answer-key small">
+            <summary>Answer key</summary>
+            <ol class="note-list">
+              <li>fui</li>
+              <li>fueron</li>
+              <li>fueron</li>
+              <li>fuimos</li>
+              <li>fui</li>
+            </ol>
+          </details>
+        </div>
+
+        <div class="panel wide">
+          <div class="mini-title">Activity: hacer or decir?</div>
+          <div class="activity-list small">
+            <div class="activity-item"><div class="activity-prompt">1. Ayer yo ___ la ensalada para la cena. (hacer)</div></div>
+            <div class="activity-item"><div class="activity-prompt">2. Mamá ___ que le gustó. (decir)</div></div>
+            <div class="activity-item"><div class="activity-prompt">3. Ellos ___ demasiado ruido. (hacer)</div></div>
+            <div class="activity-item"><div class="activity-prompt">4. Nosotros ___ que planeaste todo bien. (decir)</div></div>
+            <div class="activity-item"><div class="activity-prompt">5. ¿Quiénes ___ estas galletas? (hacer)</div></div>
+          </div>
+          <details class="answer-key small">
+            <summary>Answer key</summary>
+            <ol class="note-list">
+              <li>hice</li>
+              <li>dijo</li>
+              <li>hicieron</li>
+              <li>dijimos</li>
+              <li>hicieron</li>
+            </ol>
+          </details>
+        </div>
+
+        <div class="panel wide">
+          <div class="mini-title">Activity: class words</div>
+          <div class="activity-list small">
+            <div class="activity-item"><div class="activity-prompt">1. early → ___</div></div>
+            <div class="activity-item"><div class="activity-prompt">2. the news → ___</div></div>
+            <div class="activity-item"><div class="activity-prompt">3. many times → ___</div></div>
+            <div class="activity-item"><div class="activity-prompt">4. savings → ___</div></div>
+            <div class="activity-item"><div class="activity-prompt">5. How was your day? → ___</div></div>
+          </div>
+          <details class="answer-key small">
+            <summary>Answer key</summary>
+            <ol class="note-list">
+              <li>temprano</li>
+              <li>la noticia</li>
+              <li>muchas veces</li>
+              <li>ahorros</li>
+              <li>¿Cómo fue tu día?</li>
+            </ol>
+          </details>
         </div>
       </div>
     </section>
@@ -879,7 +1023,7 @@
         <div class="settings-row">
           <div>
             <div class="mini-title">Class notes pack</div>
-            <div class="small muted">Your handwritten class vocabulary and grammar references are now included as a dedicated study pack.</div>
+            <div class="small muted">Your handwritten class vocabulary, grammar references, and self-check activities are included as a dedicated study pack.</div>
           </div>
           <div class="tag">Built in</div>
         </div>
@@ -898,25 +1042,25 @@
 
   <script>
     const DECK = [
-      {"id":1,"category":"verb","es":"ser","en":"to be (essential)","note":"yo: soy","exampleEs":"Soy de Puerto Rico.","exampleEn":"I am from Puerto Rico."},
+      {"id":1,"category":"verb","es":"ser","en":"to be (essential)","note":"yo: soy; preterite shares forms with ir","exampleEs":"Soy de Puerto Rico.","exampleEn":"I am from Puerto Rico."},
       {"id":2,"category":"verb","es":"estar","en":"to be (state/location)","note":"yo: estoy","exampleEs":"Estoy en casa.","exampleEn":"I am at home."},
       {"id":3,"category":"verb","es":"tener","en":"to have","note":"yo: tengo","exampleEs":"Tengo tiempo.","exampleEn":"I have time."},
-      {"id":4,"category":"verb","es":"hacer","en":"to do / to make","note":"yo: hago","exampleEs":"Hago la tarea.","exampleEn":"I do the homework."},
-      {"id":5,"category":"verb","es":"ir","en":"to go","note":"yo: voy","exampleEs":"Voy al trabajo.","exampleEn":"I go to work."},
+      {"id":4,"category":"verb","es":"hacer","en":"to do / to make","note":"yo: hago; preterite stem: hic-","exampleEs":"Hago la tarea.","exampleEn":"I do the homework."},
+      {"id":5,"category":"verb","es":"ir","en":"to go","note":"yo: voy; preterite shares forms with ser","exampleEs":"Voy al trabajo.","exampleEn":"I go to work."},
       {"id":6,"category":"verb","es":"poder","en":"to be able to / can","note":"yo: puedo","exampleEs":"Puedo ayudarte.","exampleEn":"I can help you."},
       {"id":7,"category":"verb","es":"querer","en":"to want / to love","note":"yo: quiero","exampleEs":"Quiero agua.","exampleEn":"I want water."},
-      {"id":8,"category":"verb","es":"decir","en":"to say / to tell","note":"yo: digo","exampleEs":"Te digo mañana.","exampleEn":"I’ll tell you tomorrow."},
+      {"id":8,"category":"verb","es":"decir","en":"to say / to tell","note":"yo: digo; preterite stem: dij-","exampleEs":"Te digo mañana.","exampleEn":"I’ll tell you tomorrow."},
       {"id":9,"category":"verb","es":"ver","en":"to see","note":"yo: veo","exampleEs":"Veo la guagua.","exampleEn":"I see the bus."},
       {"id":10,"category":"verb","es":"dar","en":"to give","note":"yo: doy","exampleEs":"Te doy las gracias.","exampleEn":"I thank you."},
       {"id":11,"category":"verb","es":"hablar","en":"to speak / to talk","note":"yo: hablo","exampleEs":"Hablo español.","exampleEn":"I speak Spanish."},
       {"id":12,"category":"verb","es":"comer","en":"to eat","note":"yo: como","exampleEs":"Como arroz.","exampleEn":"I eat rice."},
       {"id":13,"category":"verb","es":"vivir","en":"to live","note":"yo: vivo","exampleEs":"Vivo en San Juan.","exampleEn":"I live in San Juan."},
-      {"id":14,"category":"verb","es":"venir","en":"to come","note":"yo: vengo","exampleEs":"Vengo ahora.","exampleEn":"I’m coming now."},
+      {"id":14,"category":"verb","es":"venir","en":"to come","note":"yo: vengo; class focus verb","exampleEs":"Vengo ahora.","exampleEn":"I’m coming now."},
       {"id":15,"category":"verb","es":"llevar","en":"to carry / to wear / to take","note":"yo: llevo","exampleEs":"Llevo la mochila.","exampleEn":"I’m carrying the backpack."},
       {"id":16,"category":"verb","es":"pasar","en":"to pass / to happen / to spend time","note":"yo: paso","exampleEs":"¿Qué pasa?","exampleEn":"What’s happening?"},
       {"id":17,"category":"verb","es":"deber","en":"to owe / should","note":"yo: debo","exampleEs":"Debo estudiar.","exampleEn":"I should study."},
       {"id":18,"category":"verb","es":"poner","en":"to put","note":"yo: pongo","exampleEs":"Pongo la mesa.","exampleEn":"I set the table."},
-      {"id":19,"category":"verb","es":"parecer","en":"to seem","note":"yo: parezco","exampleEs":"Me parece bien.","exampleEn":"That seems good to me."},
+      {"id":19,"category":"verb","es":"parecer","en":"to seem","note":"yo: parezco; class focus verb","exampleEs":"Me parece bien.","exampleEn":"That seems good to me."},
       {"id":20,"category":"verb","es":"quedar","en":"to remain / to fit / to meet","note":"yo: quedo","exampleEs":"La camisa me queda bien.","exampleEn":"The shirt fits me well."},
       {"id":21,"category":"verb","es":"creer","en":"to believe","note":"yo: creo","exampleEs":"Creo que sí.","exampleEn":"I think so."},
       {"id":22,"category":"verb","es":"encontrar","en":"to find","note":"yo: encuentro","exampleEs":"Encuentro las llaves.","exampleEn":"I find the keys."},
@@ -970,7 +1114,7 @@
       {"id":69,"category":"common","es":"agua","en":"water","note":"","exampleEs":"Quiero agua.","exampleEn":"I want water."},
       {"id":70,"category":"common","es":"comida","en":"food","note":"","exampleEs":"La comida está buena.","exampleEn":"The food is good."},
       {"id":71,"category":"common","es":"dinero","en":"money","note":"","exampleEs":"No tengo dinero.","exampleEn":"I don’t have money."},
-      {"id":72,"category":"common","es":"tiempo","en":"time / weather","note":"","exampleEs":"No tengo tiempo.","exampleEn":"I don’t have time."},
+      {"id":72,"category":"common","es":"tiempo","en":"time / weather","note":"El tiempo can mean the weather.","exampleEs":"No tengo tiempo.","exampleEn":"I don’t have time."},
       {"id":73,"category":"common","es":"amigo","en":"friend","note":"","exampleEs":"Mi amigo llega hoy.","exampleEn":"My friend arrives today."},
       {"id":74,"category":"common","es":"familia","en":"family","note":"","exampleEs":"Mi familia vive aquí.","exampleEn":"My family lives here."},
       {"id":75,"category":"common","es":"día","en":"day","note":"","exampleEs":"Buen día.","exampleEn":"Good day."},
@@ -996,7 +1140,7 @@
       {"id":94,"category":"puerto_rico","es":"zafacón","en":"trash can","note":"PR everyday word; standard: basurero/papelera","exampleEs":"Pon eso en el zafacón.","exampleEn":"Put that in the trash can."},
       {"id":95,"category":"puerto_rico","es":"guineo","en":"banana","note":"Common Caribbean usage.","exampleEs":"Compré guineos.","exampleEn":"I bought bananas."},
       {"id":96,"category":"puerto_rico","es":"habichuelas","en":"beans","note":"Very common PR word.","exampleEs":"Hoy comí arroz con habichuelas.","exampleEn":"Today I ate rice with beans."},
-      {"id":97,"category":"puerto_rico","es":"nevera","en":"fridge","note":"Common in PR and much of the Caribbean.","exampleEs":"El agua está en la nevera.","exampleEn":"The water is in the fridge."},
+      {"id":97,"category":"puerto_rico","es":"nevera","en":"fridge","note":"Common in PR and much of the Caribbean; from your notes too.","exampleEs":"El agua está en la nevera.","exampleEn":"The water is in the fridge."},
       {"id":98,"category":"puerto_rico","es":"mahones","en":"jeans","note":"PR everyday word.","exampleEs":"Me pongo los mahones.","exampleEn":"I’m putting on my jeans."},
       {"id":99,"category":"puerto_rico","es":"chavos","en":"money / bucks","note":"Casual everyday word.","exampleEs":"No tengo chavos.","exampleEn":"I don’t have money."},
       {"id":100,"category":"puerto_rico","es":"parquear","en":"to park","note":"English-influenced form; standard: estacionar","exampleEs":"Voy a parquear aquí.","exampleEn":"I’m going to park here."},
@@ -1011,7 +1155,7 @@
       {"id":109,"category":"puerto_rico","es":"jugo de china","en":"orange juice","note":"Very common everyday phrase.","exampleEs":"Tomé jugo de china.","exampleEn":"I drank orange juice."},
 
       {"id":110,"category":"class_notes","es":"ayer","en":"yesterday","note":"From your class notes","exampleEs":"Ayer pude cocinar.","exampleEn":"Yesterday I was able to cook."},
-      {"id":111,"category":"class_notes","es":"premio","en":"prize","note":"From your class notes","exampleEs":"Gané un premio.","exampleEn":"I won a prize."},
+      {"id":111,"category":"class_notes","es":"premio","en":"prize","note":"From your class notes","exampleEs":"Gané un premio en clase.","exampleEn":"I won a prize in class."},
       {"id":112,"category":"class_notes","es":"medalla de oro","en":"gold medal","note":"From your class notes","exampleEs":"Ella ganó la medalla de oro.","exampleEn":"She won the gold medal."},
       {"id":113,"category":"class_notes","es":"medalla de plata","en":"silver medal","note":"From your class notes","exampleEs":"Él ganó la medalla de plata.","exampleEn":"He won the silver medal."},
       {"id":114,"category":"class_notes","es":"pasado mañana","en":"the day after tomorrow","note":"From your class notes","exampleEs":"Vengo pasado mañana.","exampleEn":"I’m coming the day after tomorrow."},
@@ -1037,7 +1181,29 @@
       {"id":134,"category":"class_notes","es":"agrada","en":"is pleasing / is liked","note":"From agradar","exampleEs":"Me agrada este lugar.","exampleEn":"I like this place."},
       {"id":135,"category":"class_notes","es":"acostarse","en":"to go to bed","note":"Reflexive verb from your notes","exampleEs":"Me voy a acostar temprano.","exampleEn":"I’m going to bed early."},
       {"id":136,"category":"class_notes","es":"El que invita paga.","en":"Whoever invites pays.","note":"Class proverb","exampleEs":"El que invita paga.","exampleEn":"Whoever invites pays."},
-      {"id":137,"category":"class_notes","es":"Barriga llena, corazón contento.","en":"Full belly, happy heart.","note":"Class proverb","exampleEs":"Barriga llena, corazón contento.","exampleEn":"Full belly, happy heart."}
+      {"id":137,"category":"class_notes","es":"Barriga llena, corazón contento.","en":"Full belly, happy heart.","note":"Class proverb","exampleEs":"Barriga llena, corazón contento.","exampleEn":"Full belly, happy heart."},
+      {"id":138,"category":"class_notes","es":"temprano","en":"early","note":"From your class notes","exampleEs":"Llego temprano a clase.","exampleEn":"I arrive early to class."},
+      {"id":139,"category":"class_notes","es":"valiente","en":"brave","note":"From your class notes","exampleEs":"Ella es valiente.","exampleEn":"She is brave."},
+      {"id":140,"category":"class_notes","es":"simpático","en":"nice / friendly","note":"From your class notes","exampleEs":"Mi profesor es simpático.","exampleEn":"My teacher is nice."},
+      {"id":141,"category":"class_notes","es":"sin avisar","en":"without warning / by surprise","note":"From your class notes","exampleEs":"Llegaron sin avisar.","exampleEn":"They arrived without warning."},
+      {"id":142,"category":"class_notes","es":"la noticia","en":"the news","note":"From your class notes","exampleEs":"Supe la noticia ayer.","exampleEn":"I found out the news yesterday."},
+      {"id":143,"category":"class_notes","es":"la sangre","en":"blood","note":"From your class notes","exampleEs":"La sangre es roja.","exampleEn":"Blood is red."},
+      {"id":144,"category":"class_notes","es":"ruido","en":"noise","note":"From your class notes","exampleEs":"Hay mucho ruido aquí.","exampleEn":"There is a lot of noise here."},
+      {"id":145,"category":"class_notes","es":"galletas","en":"cookies","note":"From your class notes","exampleEs":"Hice galletas ayer.","exampleEn":"I made cookies yesterday."},
+      {"id":146,"category":"class_notes","es":"la criada","en":"the maid / housekeeper","note":"From your class notes","exampleEs":"La criada limpió la sala.","exampleEn":"The maid cleaned the living room."},
+      {"id":147,"category":"class_notes","es":"ahorros","en":"savings","note":"From your class notes","exampleEs":"Guardé mis ahorros.","exampleEn":"I saved my savings."},
+      {"id":148,"category":"class_notes","es":"signo","en":"sign / astrology sign","note":"From your class notes","exampleEs":"¿Cuál es tu signo?","exampleEn":"What is your sign?"},
+      {"id":149,"category":"class_notes","es":"una sastrería","en":"a tailor shop","note":"From your class notes","exampleEs":"Fui a una sastrería.","exampleEn":"I went to a tailor shop."},
+      {"id":150,"category":"class_notes","es":"mucho tiempo","en":"a long time","note":"From your class notes","exampleEs":"Esperé mucho tiempo.","exampleEn":"I waited a long time."},
+      {"id":151,"category":"class_notes","es":"muchas veces","en":"many times","note":"From your class notes","exampleEs":"Practiqué muchas veces.","exampleEn":"I practiced many times."},
+      {"id":152,"category":"class_notes","es":"pelea","en":"fight","note":"From your class notes","exampleEs":"La pelea terminó rápido.","exampleEn":"The fight ended quickly."},
+      {"id":153,"category":"class_notes","es":"los culpables","en":"the guilty ones","note":"From your class notes","exampleEs":"Ellos fueron los culpables.","exampleEn":"They were the guilty ones."},
+      {"id":154,"category":"class_notes","es":"toreros","en":"bullfighters","note":"From your class notes","exampleEs":"Nosotros fuimos toreros en la obra.","exampleEn":"We were bullfighters in the play."},
+      {"id":155,"category":"class_notes","es":"ganar","en":"to win","note":"From your class notes","exampleEs":"Quiero ganar el premio.","exampleEn":"I want to win the prize."},
+      {"id":156,"category":"class_notes","es":"felicitarla","en":"to congratulate her","note":"From your class notes","exampleEs":"Voy a felicitarla hoy.","exampleEn":"I am going to congratulate her today."},
+      {"id":157,"category":"class_notes","es":"¿Cómo fue tu día?","en":"How was your day?","note":"From your class notes","exampleEs":"¿Cómo fue tu día? Fue bueno.","exampleEn":"How was your day? It was good."},
+      {"id":158,"category":"class_notes","es":"¿A dónde fueron?","en":"Where did they / you all go?","note":"From your class notes","exampleEs":"¿A dónde fueron ayer?","exampleEn":"Where did they go yesterday?"},
+      {"id":159,"category":"class_notes","es":"¿Cuál es la ruta para viajar de ___ a Puerto Rico?","en":"What is the route to travel from ___ to Puerto Rico?","note":"From your class notes","exampleEs":"¿Cuál es la ruta para viajar de Nueva York a Puerto Rico?","exampleEn":"What is the route to travel from New York to Puerto Rico?"}
     ];
     const STORAGE_KEY = "boricua_flashcards_v2";
     const XP_GOAL = 100;
@@ -1062,7 +1228,7 @@
     const VERB_TENSE_EXAMPLES = {
       ser: [
         {label:"Present", es:"Soy estudiante de español.", en:"I am a Spanish student."},
-        {label:"Preterite", es:"Fui estudiante en esa escuela.", en:"I was a student at that school."},
+        {label:"Preterite", es:"Fui amable ayer.", en:"I was kind yesterday."},
         {label:"Imperfect", es:"Era tímido de niño.", en:"I was shy as a child."},
         {label:"Future", es:"Seré paciente mañana.", en:"I will be patient tomorrow."}
       ],
@@ -1080,13 +1246,13 @@
       ],
       hacer: [
         {label:"Present", es:"Hago café por la mañana.", en:"I make coffee in the morning."},
-        {label:"Preterite", es:"Hice la tarea ayer.", en:"I did the homework yesterday."},
+        {label:"Preterite", es:"Hice la ensalada ayer.", en:"I made the salad yesterday."},
         {label:"Imperfect", es:"Hacía ejercicio antes.", en:"I used to exercise before."},
-        {label:"Future", es:"Haré la cena hoy.", en:"I will make dinner today."}
+        {label:"Future", es:"Haré galletas mañana.", en:"I will make cookies tomorrow."}
       ],
       ir: [
         {label:"Present", es:"Voy a la plaza.", en:"I go to the plaza."},
-        {label:"Preterite", es:"Fui al mercado ayer.", en:"I went to the market yesterday."},
+        {label:"Preterite", es:"Fui a la escuela ayer.", en:"I went to school yesterday."},
         {label:"Imperfect", es:"Iba a la escuela en guagua.", en:"I used to go to school by bus."},
         {label:"Future", es:"Iré a San Juan mañana.", en:"I will go to San Juan tomorrow."}
       ],
@@ -1104,7 +1270,7 @@
       ],
       decir: [
         {label:"Present", es:"Digo la verdad.", en:"I tell the truth."},
-        {label:"Preterite", es:"Dije gracias.", en:"I said thank you."},
+        {label:"Preterite", es:"Dije que sí ayer.", en:"I said yes yesterday."},
         {label:"Imperfect", es:"Decía hola siempre.", en:"I used to always say hello."},
         {label:"Future", es:"Diré la respuesta.", en:"I will say the answer."}
       ],
@@ -1311,6 +1477,18 @@
         {label:"Preterite", es:"Me acosté tarde ayer.", en:"I went to bed late yesterday."},
         {label:"Imperfect", es:"Me acostaba a las diez.", en:"I used to go to bed at ten."},
         {label:"Future", es:"Me acostaré temprano hoy.", en:"I will go to bed early today."}
+      ],
+      ganar: [
+        {label:"Present", es:"Gano cuando practico.", en:"I win when I practice."},
+        {label:"Preterite", es:"Gané un premio ayer.", en:"I won a prize yesterday."},
+        {label:"Imperfect", es:"Ganaba muchas veces de niño.", en:"I used to win many times as a child."},
+        {label:"Future", es:"Ganaré con paciencia.", en:"I will win with patience."}
+      ],
+      felicitarla: [
+        {label:"Present", es:"Voy a felicitarla hoy.", en:"I am going to congratulate her today."},
+        {label:"Preterite", es:"La felicité ayer.", en:"I congratulated her yesterday."},
+        {label:"Imperfect", es:"La felicitaba muchas veces.", en:"I used to congratulate her many times."},
+        {label:"Future", es:"La felicitaré mañana.", en:"I will congratulate her tomorrow."}
       ]
     };
 
@@ -1404,7 +1582,27 @@
       125:[{es:"El albergue de animales necesita ayuda.", en:"The animal shelter needs help."},{es:"Voy al albergue de animales el sábado.", en:"I go to the animal shelter on Saturday."}],
       126:[{es:"El acuario abre temprano.", en:"The aquarium opens early."},{es:"El acuario está cerca del mar.", en:"The aquarium is near the sea."}],
       136:[{es:"Mi abuela dice: El que invita paga.", en:"My grandmother says: whoever invites pays."},{es:"Si yo invito, yo pago.", en:"If I invite, I pay."}],
-      137:[{es:"Después de comer, digo: Barriga llena, corazón contento.", en:"After eating, I say: full belly, happy heart."},{es:"La comida está buena y todos están contentos.", en:"The food is good and everyone is happy."}]
+      137:[{es:"Después de comer, digo: Barriga llena, corazón contento.", en:"After eating, I say: full belly, happy heart."},{es:"La comida está buena y todos están contentos.", en:"The food is good and everyone is happy."}],
+      138:[{es:"Salgo temprano mañana.", en:"I leave early tomorrow."},{es:"La clase empieza temprano.", en:"Class starts early."}],
+      139:[{es:"El niño fue valiente.", en:"The boy was brave."},{es:"Quiero ser valiente en clase.", en:"I want to be brave in class."}],
+      140:[{es:"Ella es muy simpática.", en:"She is very nice."},{es:"El grupo fue simpático conmigo.", en:"The group was friendly to me."}],
+      141:[{es:"Vinieron sin avisar.", en:"They came without warning."},{es:"No llegues sin avisar.", en:"Do not arrive without warning."}],
+      142:[{es:"La noticia fue buena.", en:"The news was good."},{es:"Dije la noticia a mi familia.", en:"I told the news to my family."}],
+      143:[{es:"Vi sangre en la mano.", en:"I saw blood on the hand."},{es:"La sangre salió rápido.", en:"The blood came out quickly."}],
+      144:[{es:"El ruido me molesta.", en:"The noise bothers me."},{es:"Hicieron ruido con las guitarras.", en:"They made noise with the guitars."}],
+      145:[{es:"Las galletas están dulces.", en:"The cookies are sweet."},{es:"¿Quién hizo estas galletas?", en:"Who made these cookies?"}],
+      146:[{es:"La criada llegó temprano.", en:"The maid arrived early."},{es:"La criada dijo que el niño se portó mal.", en:"The maid said the boy behaved badly."}],
+      147:[{es:"Mis ahorros están en el banco.", en:"My savings are in the bank."},{es:"Gastamos los ahorros en el viaje.", en:"We spent the savings on the trip."}],
+      148:[{es:"Mi signo es Leo.", en:"My sign is Leo."},{es:"Ella pregunta por mi signo.", en:"She asks about my sign."}],
+      149:[{es:"La sastrería está cerca.", en:"The tailor shop is nearby."},{es:"Busco una sastrería en San Juan.", en:"I am looking for a tailor shop in San Juan."}],
+      150:[{es:"No te veo hace mucho tiempo.", en:"I have not seen you in a long time."},{es:"Estudié mucho tiempo anoche.", en:"I studied for a long time last night."}],
+      151:[{es:"Lo dije muchas veces.", en:"I said it many times."},{es:"Practico esta palabra muchas veces.", en:"I practice this word many times."}],
+      152:[{es:"La pelea fue ayer.", en:"The fight was yesterday."},{es:"No quiero una pelea.", en:"I do not want a fight."}],
+      153:[{es:"Los culpables llegaron tarde.", en:"The guilty ones arrived late."},{es:"No somos los culpables.", en:"We are not the guilty ones."}],
+      154:[{es:"Los toreros salieron al final.", en:"The bullfighters left at the end."},{es:"En la ópera, nosotros fuimos toreros.", en:"In the opera, we were bullfighters."}],
+      157:[{es:"¿Cómo fue tu día en clase?", en:"How was your day in class?"},{es:"Mi día fue tranquilo.", en:"My day was calm."}],
+      158:[{es:"¿A dónde fueron ustedes?", en:"Where did you all go?"},{es:"Fueron a la plaza.", en:"They went to the plaza."}],
+      159:[{es:"La ruta pasa por San Juan.", en:"The route passes through San Juan."},{es:"Quiero viajar de Orlando a Puerto Rico.", en:"I want to travel from Orlando to Puerto Rico."}]
     };
 
     const defaultState = () => {
