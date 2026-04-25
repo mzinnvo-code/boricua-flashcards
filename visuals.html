@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0050a4" />
+  <title>Boricua Flashcards | Visual Grammar</title>
+  <style>
+    :root {
+      --blue:#0050a4;
+      --red:#ed1b2f;
+      --sky:#72d6ff;
+      --sea:#008ecf;
+      --yellow:#ffd166;
+      --teal:#00a6a6;
+      --coral:#ff6f61;
+      --text:#16213a;
+      --muted:#5b6a7a;
+      --panel:rgba(255,255,255,.9);
+      --line:rgba(0,80,164,.16);
+      --shadow:0 16px 34px rgba(0,80,164,.16);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 8%,rgba(255,209,102,.42),transparent 28%),
+        radial-gradient(circle at 92% 18%,rgba(237,27,47,.16),transparent 22%),
+        repeating-linear-gradient(90deg,rgba(0,80,164,.12) 0 70px,rgba(255,255,255,.18) 70px 140px,rgba(0,166,166,.12) 140px 210px,rgba(255,209,102,.16) 210px 280px),
+        linear-gradient(180deg,#aee9ff 0%,#f4fcff 45%,#fff5d9 100%);
+      background-attachment:fixed;
+      -webkit-font-smoothing:antialiased;
+    }
+    .app{max-width:1100px;margin:0 auto;padding:18px 16px 32px;padding-top:calc(18px + env(safe-area-inset-top));}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.85);border-radius:28px;padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(12px);margin-bottom:14px;}
+    .brand{display:flex;gap:12px;align-items:center;min-width:0}
+    .flag{width:62px;height:42px;border-radius:11px;position:relative;overflow:hidden;box-shadow:0 8px 18px rgba(0,80,164,.2);background:linear-gradient(180deg,var(--red) 0 20%,#fff 20% 40%,var(--red) 40% 60%,#fff 60% 80%,var(--red) 80% 100%);border:2px solid #fff;flex:0 0 auto;}
+    .flag:before{content:"";position:absolute;inset:0 auto 0 0;width:60%;background:var(--blue);clip-path:polygon(0 0,100% 50%,0 100%)}
+    .flag:after{content:"";position:absolute;left:8px;top:50%;width:16px;height:16px;background:#fff;transform:translateY(-50%);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 56%,79% 91%,50% 70%,21% 91%,32% 56%,2% 35%,39% 35%)}
+    h1{margin:0;font-size:clamp(1.35rem,4vw,2.2rem);line-height:1.05;letter-spacing:-.02em}
+    .sub{margin-top:6px;color:var(--muted);font-size:.96rem;line-height:1.35}
+    a.button,button{border:0;border-radius:999px;padding:12px 15px;font-size:.96rem;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--blue),var(--sea),var(--red));box-shadow:var(--shadow);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+    button.secondary,a.secondary{background:rgba(255,255,255,.8);color:var(--text);border:1px solid var(--line);box-shadow:none}
+    .nav{display:flex;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.8);border-radius:22px;padding:8px;margin-bottom:14px;position:sticky;top:8px;z-index:5;backdrop-filter:blur(10px)}
+    .nav button{box-shadow:none;background:rgba(255,255,255,.82);color:var(--muted);border:1px solid var(--line);padding:10px 12px}
+    .nav button.active{color:var(--blue);background:linear-gradient(135deg,#fff,#fff2c2)}
+    .grid{display:grid;gap:14px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    .grid.three{grid-template-columns:repeat(3,1fr)}
+    .panel{background:var(--panel);border:1px solid rgba(255,255,255,.8);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;backdrop-filter:blur(12px)}
+    .panel h2{margin:0 0 8px;font-size:1.25rem;letter-spacing:-.01em}
+    .panel h3{margin:0 0 8px;font-size:1.05rem}
+    .muted{color:var(--muted)}
+    .small{font-size:.9rem;line-height:1.45}
+    .module{display:none}.module.active{display:block}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    .tense-card{position:relative;min-height:220px;border-radius:22px;padding:14px;background:rgba(255,255,255,.72);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+    .tense-card:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,80,164,.15)}
+    .tense-card.active{outline:3px solid rgba(0,80,164,.2)}
+    .tense-name{font-weight:900;font-size:1.06rem}.tense-use{color:var(--muted);font-size:.9rem;line-height:1.35;margin-top:4px}.formula{font-weight:900;color:var(--blue);font-size:1.15rem;margin:10px 0}.example{border-top:1px solid var(--line);padding-top:10px;line-height:1.45}.timeline{height:54px;display:flex;align-items:center;justify-content:center;margin:8px 0}.line{height:4px;width:82%;background:linear-gradient(90deg,rgba(0,80,164,.2),var(--blue),rgba(0,80,164,.2));border-radius:99px;position:relative}.dot{width:20px;height:20px;border-radius:50%;background:var(--red);box-shadow:0 0 0 8px rgba(237,27,47,.12)}.line.dotline:after{content:"";position:absolute;left:50%;top:50%;width:20px;height:20px;border-radius:50%;background:var(--red);transform:translate(-50%,-50%);box-shadow:0 0 0 8px rgba(237,27,47,.12)}.arrowline:after{content:"›";position:absolute;right:-6px;top:50%;transform:translateY(-55%);font-size:38px;color:var(--blue);font-weight:900}
+    label{font-weight:800;color:var(--blue);font-size:.88rem;display:block;margin-bottom:6px}select{width:100%;border:1px solid var(--line);border-radius:999px;padding:12px 14px;font:inherit;font-weight:800;color:var(--text);background:linear-gradient(135deg,#fff,#fff7d7)}
+    .builder-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.result{border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.8),rgba(255,242,194,.78));border:1px solid var(--line);padding:16px;margin-top:12px}.equation{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:clamp(1.35rem,5vw,2.35rem);font-weight:900}.piece{background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:16px}.plus,.equals{color:var(--muted)}.answer{color:var(--blue)}
+    .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.choice{border:1px solid var(--line);background:rgba(255,255,255,.78);border-radius:20px;padding:14px;text-align:left;color:var(--text);box-shadow:none;display:block}.choice.correct{background:rgba(16,132,92,.12);border-color:rgba(16,132,92,.35)}.choice.wrong{background:rgba(237,27,47,.1);border-color:rgba(237,27,47,.35)}.big-symbol{font-size:2.4rem;font-weight:900;color:var(--blue);margin-bottom:4px}.feedback{margin-top:12px;border-radius:18px;padding:12px;background:rgba(0,80,164,.07);border:1px solid var(--line);line-height:1.45}
+    .fork{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.fork-card{border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.72);padding:14px}.fork-title{font-weight:900;color:var(--blue);font-size:1.1rem}.forms{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pill{padding:8px 10px;border-radius:999px;background:rgba(255,209,102,.35);border:1px solid rgba(0,80,164,.14);font-weight:800}.phrase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.phrase{border-radius:20px;background:rgba(255,255,255,.72);border:1px solid var(--line);padding:14px}.phrase .es{font-weight:900;font-size:1.1rem}.phrase .en{color:var(--muted);margin-top:4px}.mapline{height:40px;position:relative;margin-top:10px}.mapline:before{content:"";position:absolute;left:8px;right:8px;top:20px;height:4px;background:linear-gradient(90deg,var(--blue),var(--sea),var(--red));border-radius:999px}.mapline:after{content:"📍";position:absolute;right:0;top:0}
+    table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:8px 7px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--muted)}.table-wrap{overflow-x:auto}.tip-list{display:grid;gap:10px;margin-top:10px}.tip{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.68);padding:12px;line-height:1.45}
+    @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.builder-grid{grid-template-columns:repeat(2,1fr)}.grid.two,.grid.three,.phrase-grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero a{width:100%}}
+    @media(max-width:560px){.cards,.choice-grid,.fork{grid-template-columns:1fr}.nav{display:grid;grid-template-columns:repeat(2,1fr)}.nav button{width:100%;font-size:.86rem;padding:10px 8px}.builder-grid{grid-template-columns:1fr}.equation{font-size:1.55rem}.panel{padding:14px}.flag{width:54px;height:36px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="brand">
+        <div class="flag" aria-hidden="true"></div>
+        <div>
+          <h1>Visual Grammar Lab</h1>
+          <div class="sub">A Puerto Rico-themed way to understand verb endings, timelines, and class phrases.</div>
+        </div>
+      </div>
+      <a class="button secondary" href="index.html">Back to flashcards</a>
+    </header>
+
+    <nav class="nav" aria-label="Visual grammar modules">
+      <button class="active" data-module="timeline">Timeline</button>
+      <button data-module="builder">Verb Builder</button>
+      <button data-module="preterite">Preterite vs Imperfect</button>
+      <button data-module="serir">Ser vs Ir</button>
+      <button data-module="phrases">Class Phrases</button>
+      <button data-module="tips">Study Moves</button>
+    </nav>
+
+    <main>
+      <section id="timeline" class="module active">
+        <div class="panel">
+          <h2>Choose the time first. Then choose the ending.</h2>
+          <div class="small muted">Tap a card. The visual cue is the part to remember: now, a finished dot, an ongoing line, or a future arrow.</div>
+          <div class="cards" id="tenseCards"></div>
+        </div>
+        <div class="panel" id="timelineDetails"></div>
+      </section>
+
+      <section id="builder" class="module">
+        <div class="panel">
+          <h2>Conjugation Builder</h2>
+          <div class="small muted">Build the verb instead of memorizing the whole table. Watch the stem, ending, and final form come together.</div>
+          <div class="builder-grid">
+            <div><label for="verbSelect">Verb</label><select id="verbSelect"></select></div>
+            <div><label for="tenseSelect">Tense</label><select id="tenseSelect"></select></div>
+            <div><label for="subjectSelect">Subject</label><select id="subjectSelect"></select></div>
+            <div><label for="placeSelect">Context</label><select id="placeSelect"></select></div>
+          </div>
+          <div class="result">
+            <div class="equation" id="equation"></div>
+            <div class="example" id="builderExample"></div>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="panel"><h3>Pattern shortcut</h3><div class="tip-list" id="patternShortcut"></div></div>
+          <div class="panel"><h3>Endings table</h3><div class="table-wrap" id="endingTable"></div></div>
+        </div>
+      </section>
+
+      <section id="preterite" class="module">
+        <div class="panel">
+          <h2>Preterite vs Imperfect</h2>
+          <div class="choice-grid">
+            <div class="choice"><div class="big-symbol">●</div><strong>Preterite</strong><div class="muted small">A completed action. Treat it like a dot on the timeline.</div></div>
+            <div class="choice"><div class="big-symbol">────</div><strong>Imperfect</strong><div class="muted small">An ongoing, repeated, or background action. Treat it like a line.</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Practice: choose the better tense</h3>
+          <div id="piPrompt" class="formula"></div>
+          <div id="piChoices" class="choice-grid"></div>
+          <div id="piFeedback" class="feedback muted">Pick an answer.</div>
+        </div>
+      </section>
+
+      <section id="serir" class="module">
+        <div class="panel">
+          <h2>Preterite: ser and ir share the same forms</h2>
+          <div class="forms"><span class="pill">fui</span><span class="pill">fuiste</span><span class="pill">fue</span><span class="pill">fuimos</span><span class="pill">fueron</span></div>
+          <div class="fork">
+            <div class="fork-card"><div class="fork-title">IR = movement</div><div class="timeline"><div class="line arrowline"></div></div><div class="example"><strong>Fuimos a San Juan.</strong><br><span class="muted">We went to San Juan.</span></div></div>
+            <div class="fork-card"><div class="fork-title">SER = identity / description / event</div><div class="timeline"><div class="dot"></div></div><div class="example"><strong>La clase fue interesante.</strong><br><span class="muted">The class was interesting.</span></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Quick decision helper</h3>
+          <div id="serIrPrompt" class="formula"></div>
+          <div id="serIrChoices" class="choice-grid"></div>
+          <div id="serIrFeedback" class="feedback muted">Choose ser or ir.</div>
+        </div>
+      </section>
+
+      <section id="phrases" class="module">
+        <div class="panel">
+          <h2>Useful phrases from class</h2>
+          <div class="small muted">These are converted into visual phrase cards so each phrase connects to a situation.</div>
+          <div class="phrase-grid" id="phraseGrid"></div>
+        </div>
+      </section>
+
+      <section id="tips" class="module">
+        <div class="panel">
+          <h2>Study moves that make this stick</h2>
+          <div class="tip-list">
+            <div class="tip"><strong>1. Say the timeline first.</strong><br>Before conjugating, say: now, finished, ongoing, or future.</div>
+            <div class="tip"><strong>2. Build one verb four ways.</strong><br>hablo → hablé → hablaba → hablaré. This teaches the tense pattern faster than isolated charts.</div>
+            <div class="tip"><strong>3. Anchor examples in places you know.</strong><br>Use San Juan, la playa, Viejo San Juan, clase, and casa so the sentence feels real.</div>
+            <div class="tip"><strong>4. For preterite vs imperfect, draw it.</strong><br>Dot for completed. Line for repeated, ongoing, or background.</div>
+            <div class="tip"><strong>5. For fui/fue/fueron, look for movement.</strong><br>If someone went somewhere, it is ir. If it describes what something was, it is ser.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+const subjects = [
+  {key:'yo', label:'yo'},
+  {key:'tu', label:'tú'},
+  {key:'el', label:'él/ella/usted'},
+  {key:'nosotros', label:'nosotros/nosotras'},
+  {key:'ellos', label:'ellos/ellas/ustedes'}
+];
+const endings = {
+  present:{name:'Present', cue:'now / habit', visual:'now', ar:['o','as','a','amos','an'], er:['o','es','e','emos','en'], ir:['o','es','e','imos','en']},
+  preterite:{name:'Preterite', cue:'finished action', visual:'dot', ar:['é','aste','ó','amos','aron'], er:['í','iste','ió','imos','ieron'], ir:['í','iste','ió','imos','ieron']},
+  imperfect:{name:'Imperfect', cue:'ongoing / repeated past', visual:'line', ar:['aba','abas','aba','ábamos','aban'], er:['ía','ías','ía','íamos','ían'], ir:['ía','ías','ía','íamos','ían']},
+  future:{name:'Future', cue:'will happen', visual:'arrow', ar:['é','ás','á','emos','án'], er:['é','ás','á','emos','án'], ir:['é','ás','á','emos','án']}
+};
+const verbs = [
+  {inf:'hablar', en:'to speak', type:'ar', stem:'habl'},
+  {inf:'viajar', en:'to travel', type:'ar', stem:'viaj'},
+  {inf:'caminar', en:'to walk', type:'ar', stem:'camin'},
+  {inf:'comer', en:'to eat', type:'er', stem:'com'},
+  {inf:'aprender', en:'to learn', type:'er', stem:'aprend'},
+  {inf:'vivir', en:'to live', type:'ir', stem:'viv'},
+  {inf:'escribir', en:'to write', type:'ir', stem:'escrib'}
+];
+const contexts = [
+  {name:'San Juan', phrase:'en San Juan'},
+  {name:'la playa', phrase:'en la playa'},
+  {name:'Viejo San Juan', phrase:'en el Viejo San Juan'},
+  {name:'clase', phrase:'en clase'},
+  {name:'Puerto Rico', phrase:'a Puerto Rico'}
+];
+const pronounText = {yo:'Yo', tu:'Tú', el:'Ella', nosotros:'Nosotros', ellos:'Ellos'};
+const tenseCards = [
+  {key:'present', title:'Present', formula:'stem + present ending', example:'Yo hablo español.', en:'I speak Spanish.'},
+  {key:'preterite', title:'Preterite', formula:'stem + completed ending', example:'Ayer hablé en clase.', en:'Yesterday I spoke in class.'},
+  {key:'imperfect', title:'Imperfect', formula:'stem + background ending', example:'Yo hablaba mucho.', en:'I used to speak a lot.'},
+  {key:'future', title:'Future', formula:'infinitive + future ending', example:'Mañana hablaré.', en:'Tomorrow I will speak.'}
+];
+const phrases = [
+  {es:'¿Cómo fue tu día?', en:'How was your day?', note:'Uses fue because you are asking what the day was like.'},
+  {es:'¿A dónde fueron?', en:'Where did they / you all go?', note:'Movement question. This is ir in the preterite.'},
+  {es:'¿Cuál es la ruta para viajar de ___ a Puerto Rico?', en:'What is the route to travel from ___ to Puerto Rico?', note:'Great for practicing places and travel language.', map:true},
+  {es:'sin avisar', en:'without warning / by surprise', note:'Useful phrase for explaining how something happened.'},
+  {es:'mucho tiempo', en:'a long time', note:'Pairs well with imperfect for ongoing time.'},
+  {es:'muchas veces', en:'many times', note:'Repeated action cue; often points toward imperfect.'}
+];
+const piQuestions = [
+  {prompt:'Yo ___ con ella ayer.', choices:['hablé','hablaba'], answer:'hablé', why:'Ayer points to a completed action, so use preterite.'},
+  {prompt:'Nosotros ___ en la playa todos los sábados.', choices:['nadamos','nadábamos'], answer:'nadábamos', why:'Todos los sábados is repeated background action, so use imperfect.'},
+  {prompt:'Ella ___ a San Juan el lunes.', choices:['fue','iba'], answer:'fue', why:'A specific completed trip uses preterite.'},
+  {prompt:'Cuando era niño, yo ___ mucho español.', choices:['practiqué','practicaba'], answer:'practicaba', why:'Cuando era niño sets up background/repeated past, so use imperfect.'}
+];
+const serIrQuestions = [
+  {prompt:'Fuimos a San Juan.', answer:'ir', why:'A San Juan shows movement toward a place.'},
+  {prompt:'La clase fue interesante.', answer:'ser', why:'Interesante describes what the class was like.'},
+  {prompt:'¿A dónde fueron?', answer:'ir', why:'A dónde asks where someone went.'},
+  {prompt:'Fue mi maestro.', answer:'ser', why:'This identifies who someone was.'}
+];
+let activeTense='present', piIndex=0, serIrIndex=0;
+function $(id){return document.getElementById(id)}
+function renderVisual(type){
+  if(type==='dot') return '<div class="timeline"><div class="dot"></div></div>';
+  if(type==='line') return '<div class="timeline"><div class="line"></div></div>';
+  if(type==='arrow') return '<div class="timeline"><div class="line arrowline"></div></div>';
+  return '<div class="timeline"><div class="line dotline"></div></div>';
+}
+function renderTenseCards(){
+  $('tenseCards').innerHTML = tenseCards.map(t => `<div class="tense-card ${t.key===activeTense?'active':''}" data-tense-card="${t.key}"><div><div class="tense-name">${t.title}</div><div class="tense-use">${endings[t.key].cue}</div>${renderVisual(endings[t.key].visual)}<div class="formula">${t.formula}</div></div><div class="example"><strong>${t.example}</strong><br><span class="muted">${t.en}</span></div></div>`).join('');
+  document.querySelectorAll('[data-tense-card]').forEach(card=>card.addEventListener('click',()=>{activeTense=card.dataset.tenseCard;renderTenseCards();renderTimelineDetails();}));
+}
+function renderTimelineDetails(){
+  const t=endings[activeTense];
+  $('timelineDetails').innerHTML=`<h2>${t.name}: ${t.cue}</h2><div class="grid two"><div>${renderVisual(t.visual)}<div class="small muted">Use this visual first, then apply the ending pattern.</div></div><div class="table-wrap">${makeTable(activeTense)}</div></div>`;
+}
+function makeTable(tense){
+  const t=endings[tense];
+  return `<table><thead><tr><th>Subject</th><th>-ar</th><th>-er</th><th>-ir</th></tr></thead><tbody>${subjects.map((s,i)=>`<tr><td>${s.label}</td><td>-${t.ar[i]}</td><td>-${t.er[i]}</td><td>-${t.ir[i]}</td></tr>`).join('')}</tbody></table>`;
+}
+function initBuilder(){
+  $('verbSelect').innerHTML=verbs.map(v=>`<option value="${v.inf}">${v.inf} (${v.en})</option>`).join('');
+  $('tenseSelect').innerHTML=Object.keys(endings).map(k=>`<option value="${k}">${endings[k].name}</option>`).join('');
+  $('subjectSelect').innerHTML=subjects.map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
+  $('placeSelect').innerHTML=contexts.map((c,i)=>`<option value="${i}">${c.name}</option>`).join('');
+  ['verbSelect','tenseSelect','subjectSelect','placeSelect'].forEach(id=>$(id).addEventListener('change',renderBuilder));
+  renderBuilder();
+}
+function conjugate(verb,tense,subjectKey){
+  const idx=subjects.findIndex(s=>s.key===subjectKey), end=endings[tense][verb.type][idx];
+  const base=tense==='future'?verb.inf:verb.stem;
+  return {base,end,form:base+end};
+}
+function renderBuilder(){
+  const verb=verbs.find(v=>v.inf===$('verbSelect').value), tense=$('tenseSelect').value, subject=$('subjectSelect').value, ctx=contexts[Number($('placeSelect').value)], built=conjugate(verb,tense,subject);
+  $('equation').innerHTML=`<span class="piece">${built.base}</span><span class="plus">+</span><span class="piece">${built.end}</span><span class="equals">=</span><span class="answer">${built.form}</span>`;
+  const where = verb.inf==='viajar' ? ctx.phrase.replace('en ','a ') : ctx.phrase;
+  $('builderExample').innerHTML=`<strong>${pronounText[subject]} ${built.form} ${where}.</strong><br><span class="muted">${endings[tense].name}: ${endings[tense].cue}</span>`;
+  $('patternShortcut').innerHTML=[
+    '<div class="tip"><strong>Present</strong><br>Use the stem. Yo almost always ends in -o for regular verbs.</div>',
+    '<div class="tip"><strong>Preterite</strong><br>Look for the finished-action dot. Yo forms often carry an accent: hablé, comí, viví.</div>',
+    '<div class="tip"><strong>Imperfect</strong><br>-ar uses -aba. -er and -ir use -ía. This is the background line.</div>',
+    '<div class="tip"><strong>Future</strong><br>Keep the full infinitive and add the future ending: hablar + é.</div>'
+  ].join('');
+  $('endingTable').innerHTML=makeTable(tense);
+}
+function renderPI(){
+  const q=piQuestions[piIndex%piQuestions.length];
+  $('piPrompt').textContent=q.prompt;
+  $('piChoices').innerHTML=q.choices.map(c=>`<button class="choice" data-pi="${c}">${c}</button>`).join('');
+  $('piFeedback').textContent='Pick an answer.';
+  document.querySelectorAll('[data-pi]').forEach(btn=>btn.addEventListener('click',()=>{
+    const ok=btn.dataset.pi===q.answer;
+    btn.classList.add(ok?'correct':'wrong');
+    $('piFeedback').innerHTML=`<strong>${ok?'Correct.':'Not quite.'}</strong> ${q.why}`;
+    setTimeout(()=>{piIndex++;renderPI();},1800);
+  }));
+}
+function renderSerIr(){
+  const q=serIrQuestions[serIrIndex%serIrQuestions.length];
+  $('serIrPrompt').textContent=q.prompt;
+  $('serIrChoices').innerHTML=['ser','ir'].map(c=>`<button class="choice" data-serir="${c}">${c.toUpperCase()}</button>`).join('');
+  $('serIrFeedback').textContent='Choose ser or ir.';
+  document.querySelectorAll('[data-serir]').forEach(btn=>btn.addEventListener('click',()=>{
+    const ok=btn.dataset.serir===q.answer;
+    btn.classList.add(ok?'correct':'wrong');
+    $('serIrFeedback').innerHTML=`<strong>${ok?'Correct.':'Not quite.'}</strong> ${q.why}`;
+    setTimeout(()=>{serIrIndex++;renderSerIr();},1800);
+  }));
+}
+function renderPhrases(){
+  $('phraseGrid').innerHTML=phrases.map(p=>`<div class="phrase"><div class="es">${p.es}</div><div class="en">${p.en}</div>${p.map?'<div class="mapline"></div>':''}<div class="example small">${p.note}</div></div>`).join('');
+}
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  $(btn.dataset.module).classList.add('active');
+}));
+renderTenseCards();renderTimelineDetails();initBuilder();renderPI();renderSerIr();renderPhrases();
+</script>
+</body>
+</html>
