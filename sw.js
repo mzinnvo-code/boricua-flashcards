@@ -1,6 +1,16 @@
 
-const CACHE = "boricua-flashcards-v6";
-const ASSETS = ["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
+const CACHE = "boricua-flashcards-v7";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./404.html",
+  "./manifest.webmanifest",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./legacy-index.html",
+  "./integrated-v2.html",
+  "./visuals.html"
+];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();
