@@ -1,5 +1,5 @@
 
-const CACHE = "boricua-flashcards-v8";
+const CACHE = "boricua-flashcards-v9";
 const ASSETS = [
   "./",
   "./index.html",
